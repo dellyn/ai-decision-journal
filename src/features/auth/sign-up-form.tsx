@@ -1,7 +1,9 @@
 "use client";
 
+import { useState } from "react";
+import { useRouter } from "next/navigation";
+import Link from "next/link";
 import { cn } from "@/lib/utils";
-import { createClient } from "@/lib/supabase/client";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -12,47 +14,46 @@ import {
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import Link from "next/link";
-import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { authApi } from "@/shared/api/auth";
+import { SignUpFormData, AuthState } from "@/shared/types/auth";
 
 export function SignUpForm({
   className,
   ...props
 }: React.ComponentPropsWithoutRef<"div">) {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [repeatPassword, setRepeatPassword] = useState("");
-  const [error, setError] = useState<string | null>(null);
-  const [isLoading, setIsLoading] = useState(false);
+  const [formData, setFormData] = useState<SignUpFormData>({
+    email: "",
+    password: "",
+    repeatPassword: "",
+  });
+  const [state, setState] = useState<AuthState>({
+    isLoading: false,
+    error: null,
+  });
   const router = useRouter();
 
   const handleSignUp = async (e: React.FormEvent) => {
     e.preventDefault();
-    const supabase = createClient();
-    setIsLoading(true);
-    setError(null);
+    setState({ isLoading: true, error: null });
 
-    if (password !== repeatPassword) {
-      setError("Passwords do not match");
-      setIsLoading(false);
+    if (formData.password !== formData.repeatPassword) {
+      setState({
+        isLoading: false,
+        error: { message: "Passwords do not match" },
+      });
       return;
     }
 
     try {
-      const { error } = await supabase.auth.signUp({
-        email,
-        password,
-        options: {
-          emailRedirectTo: `${window.location.origin}/protected`,
-        },
-      });
-      if (error) throw error;
+      await authApi.signUp(formData);
       router.push("/auth/sign-up-success");
     } catch (error: unknown) {
-      setError(error instanceof Error ? error.message : "An error occurred");
-    } finally {
-      setIsLoading(false);
+      setState({
+        isLoading: false,
+        error: {
+          message: error instanceof Error ? error.message : "An error occurred",
+        },
+      });
     }
   };
 
@@ -73,8 +74,10 @@ export function SignUpForm({
                   type="email"
                   placeholder="m@example.com"
                   required
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
+                  value={formData.email}
+                  onChange={(e) =>
+                    setFormData((prev) => ({ ...prev, email: e.target.value }))
+                  }
                 />
               </div>
               <div className="grid gap-2">
@@ -85,8 +88,10 @@ export function SignUpForm({
                   id="password"
                   type="password"
                   required
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
+                  value={formData.password}
+                  onChange={(e) =>
+                    setFormData((prev) => ({ ...prev, password: e.target.value }))
+                  }
                 />
               </div>
               <div className="grid gap-2">
@@ -97,13 +102,20 @@ export function SignUpForm({
                   id="repeat-password"
                   type="password"
                   required
-                  value={repeatPassword}
-                  onChange={(e) => setRepeatPassword(e.target.value)}
+                  value={formData.repeatPassword}
+                  onChange={(e) =>
+                    setFormData((prev) => ({
+                      ...prev,
+                      repeatPassword: e.target.value,
+                    }))
+                  }
                 />
               </div>
-              {error && <p className="text-sm text-red-500">{error}</p>}
-              <Button type="submit" className="w-full" disabled={isLoading}>
-                {isLoading ? "Creating an account..." : "Sign up"}
+              {state.error && (
+                <p className="text-sm text-red-500">{state.error.message}</p>
+              )}
+              <Button type="submit" className="w-full" disabled={state.isLoading}>
+                {state.isLoading ? "Creating an account..." : "Sign up"}
               </Button>
             </div>
             <div className="mt-4 text-center text-sm">
@@ -117,4 +129,4 @@ export function SignUpForm({
       </Card>
     </div>
   );
-}
+} 
