@@ -1,9 +1,14 @@
-export type User = {
+export interface User {
   id: string;
   email: string;
-  createdAt: Date;
-  updatedAt: Date;
-};
+  created_at: string;
+  updated_at: string;
+}
+
+export interface UserResponse {
+  user: User | null;
+  error: Error | null;
+}
 
 export type UserCredentials = {
   email: string;
