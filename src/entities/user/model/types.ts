@@ -10,12 +10,3 @@ export interface UserResponse {
   error: Error | null;
 }
 
-export type UserCredentials = {
-  email: string;
-  password: string;
-};
-
-export type UserSession = {
-  user: User;
-  expires: Date;
-}; 

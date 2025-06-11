@@ -1,3 +1,5 @@
+
+
 export type DecisionStatus = 'pending' | 'processing' | 'done' | 'error';
 
 export type DecisionCategory = 'Emotional' | 'Strategic' | 'Impulsive' | 'Rational';
@@ -19,6 +21,8 @@ export type Decision = {
   createdAt: Date;
   updatedAt: Date;
 };
+
+export type DecisionResponse = Omit<Decision, 'userId'>
 
 export type CreateDecisionInput = {
   situation: string;

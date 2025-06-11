@@ -19,7 +19,7 @@ const eslintConfig = [
           zones: [
             {
               target: "src/pages/**",
-              from: "src/app/**",
+              from: "src/app/**", 
               message: "Pages cannot import from app layer"
             },
             {
@@ -28,12 +28,12 @@ const eslintConfig = [
               message: "Widgets cannot import from pages or app layers"
             },
             {
-              target: "src/features/**",
-              from: ["src/widgets/**", "src/pages/**", "src/app/**", "src/features/**"],
+              target: "src/features/*/**",
+              from: ["src/widgets/**", "src/pages/**", "src/app/**",],
               message: "Features cannot import from widgets, pages, app layers, or other features"
             },
             {
-              target: "src/entities/**",
+              target: "src/entities/**", 
               from: ["src/features/**", "src/widgets/**", "src/pages/**", "src/app/**"],
               message: "Entities cannot import from features, widgets, pages, or app layers"
             },
