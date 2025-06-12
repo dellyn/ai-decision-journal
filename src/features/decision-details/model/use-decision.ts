@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useDecisionStore, Decision } from "@/entities/decision";
-import { decisionsApi } from "@/shared/api/decisions";
+import { decisionApi } from "@/entities/decision/api/decisionApi";
 
 export function useDecision(decisionId: string): { decision: Decision | null, isLoading: boolean, error: Error | null } {
   const { getDecisionById } = useDecisionStore();
@@ -14,7 +14,7 @@ export function useDecision(decisionId: string): { decision: Decision | null, is
       const fetchDecision = async () => {
         try {
           setIsLoading(true);
-          const decisionResponse = await decisionsApi.getDecisionById(decisionId);
+          const decisionResponse = await decisionApi.getById  (decisionId);
           return decisionResponse;
         } catch (err) {
           setError(err as Error);

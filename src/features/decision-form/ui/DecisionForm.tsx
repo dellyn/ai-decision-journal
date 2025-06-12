@@ -12,16 +12,30 @@ import {
   FormMessage,
 } from "@/shared/components/ui/form";
 import { useDecisionForm } from "../model/useDecisionForm";
-import { decisionFormApi } from "../api";
+import { useRouter } from "next/navigation";
+import { useDecisionStore } from "@/entities/decision";
+import { Routes } from "@/shared/routes";
+import { DecisionStatus } from "@/entities/decision/model/types";
+import { decisionApi } from "@/entities/decision/api/decisionApi";
 
 export function DecisionForm() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const form = useDecisionForm();
+  const router = useRouter();
+  const { addDecision, setSelectedDecisionId } = useDecisionStore();
 
   const onSubmit = async (data: DecisionFormData) => {
     try {
       setIsSubmitting(true);
-      await decisionFormApi.create(data);
+      const decision = await decisionApi.create(data);
+      
+      // Optimistically add the decision to the store
+      addDecision({...decision, status: DecisionStatus.PROCESSING});
+      
+      // Navigate to the decision details
+      setSelectedDecisionId(decision.id);
+      router.push(`${Routes.DECISIONS}/${decision.id}`);
+      
       form.reset();
     } catch (error) {
       console.error("Failed to create decision:", error);

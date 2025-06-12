@@ -1,3 +1,10 @@
+export enum DecisionStatus {
+  PENDING = 'pending',
+  PROCESSING = 'processing',
+  DONE = 'done',
+  ERROR = 'error',
+}
+
 export type DecisionStatus = 'pending' | 'processing' | 'done' | 'error';
 
 export type DecisionCategory = 'Emotional' | 'Strategic' | 'Impulsive' | 'Rational';
@@ -5,30 +12,31 @@ export type DecisionCategory = 'Emotional' | 'Strategic' | 'Impulsive' | 'Ration
 export interface Bias {
   name: string;
   description: string;
+  impact: "positive" | "negative" | "neutral";
+  explanation: string;
 }
 
 export type DecisionAnalysis = {
   category: DecisionCategory;
   biases: Bias[];
-  alternatives: string[];
+  suggestions: string[];
+  score: number;
 };
 
-export type Decision = {
+export interface Decision {
   id: string;
-  userId: string;
   situation: string;
   decision: string;
   reasoning?: string;
-  status: DecisionStatus;
   analysis?: DecisionAnalysis;
-  createdAt: Date;
-  updatedAt: Date;
-};
+  createdAt: string;
+  updatedAt: string;
+}
 
 export type DecisionResponse = Omit<Decision, 'userId'>
 
-export type CreateDecisionInput = {
+export interface DecisionFormData {
   situation: string;
   decision: string;
   reasoning?: string;
-}; 
+} 

@@ -1,20 +1,32 @@
 import { create } from "zustand";
-import { DecisionRecord } from "../types";
+import { Decision } from "./types";
 
-interface DecisionState {
-  decisions: DecisionRecord[];
+interface DecisionStore {
+  decisions: Decision[];
   selectedDecisionId: string | null;
-  setDecisions: (decisions: DecisionRecord[]) => void;
+  setDecisions: (decisions: Decision[]) => void;
+  addDecision: (decision: Decision) => void;
+  updateDecision: (decision: Decision) => void;
+  deleteDecision: (id: string) => void;
   setSelectedDecisionId: (id: string | null) => void;
-  getDecisionById: (id: string) => DecisionRecord | undefined;
+  getSelectedDecision: () => Decision | undefined;
 }
 
-export const useDecisionStore = create<DecisionState>((set, get) => {
-  return {
+export const useDecisionStore = create<DecisionStore>((set, get) => ({
   decisions: [],
   selectedDecisionId: null,
   setDecisions: (decisions) => set({ decisions }),
+  addDecision: (decision) => set((state) => ({
+    decisions: [decision, ...state.decisions],
+  })),
+  updateDecision: (decision) => set((state) => ({
+    decisions: state.decisions.map((d) => (d.id === decision.id ? decision : d)),
+  })),
+  deleteDecision: (id) => set((state) => ({
+    decisions: state.decisions.filter((d) => d.id !== id),
+  })),
   setSelectedDecisionId: (id) => set({ selectedDecisionId: id }),
+
   getDecisionById: (id) => get().decisions.find((decision) => decision.id === id),
-}
-}); 
+
+})); 

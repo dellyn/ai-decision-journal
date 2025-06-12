@@ -10,6 +10,8 @@ import { cn } from "@/shared/utils";
 import { usePathname, useRouter } from "next/navigation";
 import { useDecisionStore } from "@/entities/decision";
 import { Routes } from "@/shared/routes";
+import { DecisionStatus } from "@/entities/decision/model/types";
+import { useProcessingDecisions } from "@/entities/decision/model/useProcessingDecisions";
 
 export function DecisionsList() {
   const [isLoading, setIsLoading] = useState(true);
@@ -19,13 +21,14 @@ export function DecisionsList() {
   const pathname = usePathname();
   const router = useRouter();
   const { decisions, setDecisions, setSelectedDecisionId } = useDecisionStore();
+  
+  useProcessingDecisions();
 
   const fetchDecisions = async (pageNumber: number = 1) => {
     try {
       setIsLoading(true);
       setError(null);
-      const response = await fetch(`/api/decisions?page=${pageNumber}&pageSize=10`);
-      if (!response.ok) throw new Error("Failed to fetch decisions");
+      const response = await decisionApi.getAll(pageNumber, 10); 
       const data: PaginatedDecisions = await response.json();
       setDecisions(data.data);
       setTotal(data.total);
@@ -136,9 +139,9 @@ function DecisionListItem({
           )}
         </div>
         <div className="flex items-center gap-2">
-          {decision.status === "processing" ? (
+          {decision.status === DecisionStatus.PROCESSING ? (
             <Loader2 className="h-4 w-4 animate-spin" />
-          ) : decision.status === "error" ? (
+          ) : decision.status === DecisionStatus.ERROR ? (
             <Badge variant="destructive">Error</Badge>
           ) : null}
         </div>

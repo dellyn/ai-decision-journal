@@ -134,7 +134,7 @@ export async function getDecisionById(id: string): Promise<DecisionRecord> {
 
   if (error?.message) {
     console.error("Supabase error:", error);
-    throw new Error(error.message || "Failed to fetch decision");
+    throw new Error(error.message);
   }
 
   if (!data) {
