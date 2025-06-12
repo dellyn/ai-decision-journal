@@ -7,7 +7,7 @@ export interface DecisionRecord {
   situation: string;
   decision: string;
   reasoning?: string;
-  status: "pending" | "processing" | "done" | "error";
+  status:  "processing" | "done" | "error";
   analysis?: {
     category: string;
     biases: string[];
@@ -31,7 +31,7 @@ export async function createDecision(data: DecisionFormData, userId: string): Pr
       situation: data.situation,
       decision: data.decision,
       reasoning: data.reasoning,
-      status: "pending",
+      status: "processing",
     })
     .select()
     .single();

@@ -1,46 +1,33 @@
-import { useEffect } from "react";
-import { useDecisionStore } from "./store";
-import { DecisionStatus } from "./types";
-import { decisionApi } from "@/entities/decision/api/decisionApi";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { Decision, DecisionStatus } from "./types";
 
-const POLLING_INTERVAL = 3000;
+const API_URL = "/api/decisions";
 
-export function useProcessingDecisions() {
-  const { decisions, updateDecision } = useDecisionStore();
+export function useProcessingDecisions(decisions: Decision[]) {
+  const queryClient = useQueryClient();
 
-  useEffect(() => {
-    const processingDecisions = decisions.filter(
-      (decision) => decision.status === DecisionStatus.PROCESSING
-    );
+  return useQuery({
+    queryKey: ["processing-decisions"],
+    queryFn: async () => {
+      await Promise.all(
+        decisions.map(async (decision: Decision) => {
 
-    if (processingDecisions.length === 0) return;
+          if (decision.status === DecisionStatus.PROCESSING) {
 
-    const pollDecisions = async () => {
-      const results = await Promise.allSettled(
-        processingDecisions.map(async (decision) => {
-          try {
-            const response = await decisionApi.getById(decision.id);
-            if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
-            return response.json();
-          } catch (error) {
-            console.error(`Error polling decision ${decision.id}:`, error);
-            return null;
+            const decisionResponse = await fetch(`${API_URL}/${decision.id}`);
+   
+            const updatedDecision = await decisionResponse.json();
+            if (updatedDecision.status !== DecisionStatus.PROCESSING) {
+              queryClient.setQueryData(["decision", updatedDecision.id], updatedDecision);
+              queryClient.invalidateQueries({ queryKey: ["decisions"] });
+            }
           }
         })
       );
 
-      results.forEach((result) => {
-        if (result.status === 'fulfilled' && result.value) {
-          const decision = result.value;
-          if (decision.status !== DecisionStatus.PROCESSING) {
-            updateDecision(decision);
-          }
-        }
-      });
-    };
-
-    const intervalId = setInterval(pollDecisions, POLLING_INTERVAL);
-
-    return () => clearInterval(intervalId);
-  }, [decisions, updateDecision]);
+      return null;
+    },
+    refetchInterval: 3000,
+    staleTime: 0,
+  });
 } 

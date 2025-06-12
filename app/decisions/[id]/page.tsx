@@ -1,7 +1,7 @@
 "use client";
 
 import { DecisionDetails } from "@/features/decision-details";
-import { useDecision } from "@/features/decision-details/model/use-decision";
+import { useDecision } from "@/entities/decision";
 import { use } from "react";
 
 interface DecisionDetailPageProps {
@@ -12,7 +12,7 @@ interface DecisionDetailPageProps {
 
 export default function DecisionDetailPage({ params }: DecisionDetailPageProps) {
   const { id } = use(params);
-  const { decision, isLoading, error } = useDecision(id);
+  const { data, isLoading, error } = useDecision(id);
 
   if (error) {
     return <div>Error loading decision: {error.message}</div>;
@@ -22,9 +22,6 @@ export default function DecisionDetailPage({ params }: DecisionDetailPageProps) 
     return <div>Loading...</div>;
   }
 
-  if (!decision) {
-    return <div>Decision not found</div>;
-  }
 
-  return <DecisionDetails decision={decision} />;
+  return <DecisionDetails decision={data} />;
 } 

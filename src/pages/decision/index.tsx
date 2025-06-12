@@ -4,7 +4,7 @@ import { DecisionForm } from "@/features/decision-form";
 import { DecisionsList } from "@/features/decisions-list";
 import { DecisionDetails } from "@/features/decision-details";
 import { TwoColumnLayout } from "@/shared/layouts/TwoColumnLayout";
-import { useDecision } from "@/features/decision-details/model/use-decision";
+import { useDecision } from "@/features/decision";
 
 interface DecisionPageProps {
   decisionId: string;
@@ -16,6 +16,7 @@ export function DecisionPage({ decisionId }: DecisionPageProps) {
   if (error) {
     return <div>Error loading decision: {error.message}</div>;
   }
+  console.log(0,{decision})
 
   return (
     <TwoColumnLayout sidebar={<DecisionsList />}>

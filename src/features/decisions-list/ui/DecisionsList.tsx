@@ -1,51 +1,23 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import { DecisionRecord, PaginatedDecisions } from "@/lib/repositories/decisionRepository";
-import { Button } from "@/shared/components/ui/button";
-import { Card } from "@/shared/components/ui/card";
-import { Badge } from "@/shared/components/ui/badge";
-import { Loader2 } from "lucide-react";
-import { cn } from "@/shared/utils";
+import { useState } from "react";
 import { usePathname, useRouter } from "next/navigation";
-import { useDecisionStore } from "@/entities/decision";
+import { Button } from "@/shared/components/ui/button";
+import { Loader2 } from "lucide-react";
 import { Routes } from "@/shared/routes";
-import { DecisionStatus } from "@/entities/decision/model/types";
 import { useProcessingDecisions } from "@/entities/decision/model/useProcessingDecisions";
+import { useDecisions } from "@/entities/decision/model/useDecisions";
+import { DecisionListItem } from "./DecisionListItem";
 
 export function DecisionsList() {
-  const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
-  const [page, setPage] = useState(1);
-  const [total, setTotal] = useState(0);
+  const [pageNumber, setPageNumber] = useState(1);
+  const { data, isLoading, error } = useDecisions(pageNumber, 10);
   const pathname = usePathname();
   const router = useRouter();
-  const { decisions, setDecisions, setSelectedDecisionId } = useDecisionStore();
-  
-  useProcessingDecisions();
 
-  const fetchDecisions = async (pageNumber: number = 1) => {
-    try {
-      setIsLoading(true);
-      setError(null);
-      const response = await decisionApi.getAll(pageNumber, 10); 
-      const data: PaginatedDecisions = await response.json();
-      setDecisions(data.data);
-      setTotal(data.total);
-      setPage(pageNumber);
-    } catch (err) {
-      setError(err instanceof Error ? err.message : "Failed to fetch decisions");
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
-  useEffect(() => {
-    fetchDecisions();
-  }, []);
+  useProcessingDecisions(data?.data || []);
 
   const handleDecisionClick = (decisionId: string) => {
-    setSelectedDecisionId(decisionId);
     router.push(`${Routes.DECISIONS}/${decisionId}`);
   };
 
@@ -60,13 +32,13 @@ export function DecisionsList() {
   if (error) {
     return (
       <div className="flex flex-col items-center gap-4 p-8">
-        <p className="text-destructive">{error}</p>
-        <Button onClick={() => fetchDecisions(page)}>Retry</Button>
+        <p className="text-destructive">Error loading decisions</p>
+        <Button onClick={() => setPageNumber(1)}>Retry</Button>
       </div>
     );
   }
 
-  if (!decisions.length) {
+  if (!data?.data?.length) {
     return (
       <div className="flex justify-center p-8">
         <p className="text-muted-foreground">No decisions yet</p>
@@ -77,7 +49,7 @@ export function DecisionsList() {
   return (
     <div className="h-full flex flex-col">
       <div className="flex-1 overflow-y-auto space-y-2 p-4">
-        {decisions.map((decision) => (
+        {data.data?.map((decision) => (
           <DecisionListItem 
             key={decision.id} 
             decision={decision} 
@@ -90,15 +62,15 @@ export function DecisionsList() {
       <div className="flex justify-center gap-2 p-4 border-t">
         <Button
           variant="outline"
-          disabled={page === 1}
-          onClick={() => fetchDecisions(page - 1)}
+          disabled={pageNumber === 1}
+          onClick={() => setPageNumber(pageNumber - 1)}
         >
           Previous
         </Button>
         <Button
           variant="outline"
-          disabled={page * 10 >= total}
-          onClick={() => fetchDecisions(page + 1)}
+          disabled={data.data?.length < 10}
+          onClick={() => setPageNumber(pageNumber + 1)}
         >
           Next
         </Button>
@@ -107,45 +79,3 @@ export function DecisionsList() {
   );
 }
 
-function getSummaryTitle(situation: string): string {
-  const words = situation.split(/\s+/);
-  return words.slice(0, 4).join(" ") + (words.length > 4 ? "..." : "");
-}
-
-function DecisionListItem({ 
-  decision, 
-  isSelected,
-  onClick
-}: { 
-  decision: DecisionRecord; 
-  isSelected: boolean;
-  onClick: () => void;
-}) {
-  return (
-    <Card 
-      className={cn(
-        "p-4 cursor-pointer transition-colors",
-        isSelected ? "bg-muted" : "hover:bg-muted/50"
-      )}
-      onClick={onClick}
-    >
-      <div className="flex items-center justify-between">
-        <div className="flex flex-col gap-1">
-          <h3 className="font-medium">{getSummaryTitle(decision.situation)}</h3>
-          {decision.analysis && (
-            <p className="text-sm text-muted-foreground">
-              {decision.analysis.category} • {decision.analysis.biases.length} biases
-            </p>
-          )}
-        </div>
-        <div className="flex items-center gap-2">
-          {decision.status === DecisionStatus.PROCESSING ? (
-            <Loader2 className="h-4 w-4 animate-spin" />
-          ) : decision.status === DecisionStatus.ERROR ? (
-            <Badge variant="destructive">Error</Badge>
-          ) : null}
-        </div>
-      </div>
-    </Card>
-  );
-}

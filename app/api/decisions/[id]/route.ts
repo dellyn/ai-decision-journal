@@ -8,6 +8,8 @@ export async function GET(
   request: Request,
   { params }: { params: { id: string } }
 ) {
+  const { id } = await params;
+
   try {
     const supabase = await createClient();
     const { data: { user }, error: authError } = await supabase.auth.getUser();
@@ -19,7 +21,7 @@ export async function GET(
       );
     }
 
-    const decision = await getDecisionById(params.id);
+    const decision = await getDecisionById(id);
 
     return NextResponse.json(decision, {
       headers: {

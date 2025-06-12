@@ -6,8 +6,9 @@ import { Badge } from "@/shared/components/ui/badge";
 import { Loader2, X } from "lucide-react";
 import { Button } from "@/shared/components/ui/button";
 import { useRouter } from "next/navigation";
-import { useDecisionStore } from "@/entities/decision";
 import { Routes } from "@/shared/routes";
+import { useUpdateDecision } from "@/entities/decision/model/useDecisions";
+import { DecisionStatus } from "@/entities/decision/model/types";
 
 interface DecisionDetailsProps {
   decision: DecisionRecord;
@@ -15,12 +16,26 @@ interface DecisionDetailsProps {
 
 export function DecisionDetails({ decision }: DecisionDetailsProps) {
   const router = useRouter();
-  const { setSelectedDecisionId } = useDecisionStore();
+  const { mutate: retryAnalysis } = useUpdateDecision();
 
   const handleClose = () => {
-    setSelectedDecisionId(null);
     router.push(Routes.DECISIONS);
   };
+
+  const handleRetry = () => {
+    retryAnalysis({
+      id: decision.id,
+      data: { status: "processing" }
+    });
+  };
+
+  if (!decision) {
+    return (
+      <div className="flex justify-center items-center h-full">
+        <p className="text-muted-foreground">Decision not found</p>
+      </div>
+    );
+  }
 
   return (
     <div className="w-full h-full overflow-y-auto">
@@ -54,7 +69,7 @@ export function DecisionDetails({ decision }: DecisionDetailsProps) {
             </Card>
           )}
 
-          {decision.status === "processing" ? (
+          {decision.status === DecisionStatus.PROCESSING ? (
             <Card className="p-6">
               <div className="flex items-center gap-2">
                 <Loader2 className="h-4 w-4 animate-spin" />
@@ -68,7 +83,7 @@ export function DecisionDetails({ decision }: DecisionDetailsProps) {
                   <Badge variant="destructive">Error</Badge>
                   <p>Failed to analyze decision</p>
                 </div>
-                <Button variant="outline" onClick={() => fetch(`/api/decisions/${decision.id}/retry`, { method: "POST" })}>
+                <Button variant="outline" onClick={handleRetry}>
                   Retry Analysis
                 </Button>
               </div>

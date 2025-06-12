@@ -5,7 +5,7 @@ export enum DecisionStatus {
   ERROR = 'error',
 }
 
-export type DecisionStatus = 'pending' | 'processing' | 'done' | 'error';
+export type DecisionStatus = 'processing' | 'done' | 'error';
 
 export type DecisionCategory = 'Emotional' | 'Strategic' | 'Impulsive' | 'Rational';
 
