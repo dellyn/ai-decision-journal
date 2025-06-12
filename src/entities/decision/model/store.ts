@@ -9,10 +9,12 @@ interface DecisionState {
   getDecisionById: (id: string) => DecisionRecord | undefined;
 }
 
-export const useDecisionStore = create<DecisionState>((set, get) => ({
+export const useDecisionStore = create<DecisionState>((set, get) => {
+  return {
   decisions: [],
   selectedDecisionId: null,
   setDecisions: (decisions) => set({ decisions }),
   setSelectedDecisionId: (id) => set({ selectedDecisionId: id }),
   getDecisionById: (id) => get().decisions.find((decision) => decision.id === id),
-})); 
+}
+}); 

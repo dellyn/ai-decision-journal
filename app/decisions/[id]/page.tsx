@@ -1,41 +1,30 @@
 "use client";
 
-import { DecisionForm } from "@/features/decision-form";
-import { DecisionsList } from "@/features/decisions-list";
 import { DecisionDetails } from "@/features/decision-details";
-import { useDecisionStore } from "@/entities/decision";
-import { useParams } from "next/navigation";
-import { useEffect } from "react";
-import { TwoColumnLayout } from "@/shared/layouts/TwoColumnLayout";
+import { useDecision } from "@/features/decision-details/model/use-decision";
+import { use } from "react";
 
-export default function ChatDecisionPage() {
-  const params = useParams();
-  const { getDecisionById, setSelectedDecisionId, decisions } = useDecisionStore();
-  const decision = getDecisionById(params.id as string);
+interface DecisionDetailPageProps {
+  params: Promise<{
+    id: string;
+  }>;
+}
 
-  useEffect(() => {
-    setSelectedDecisionId(params.id as string);
-  }, [params.id, setSelectedDecisionId]);
+export default function DecisionDetailPage({ params }: DecisionDetailPageProps) {
+  const { id } = use(params);
+  const { decision, isLoading, error } = useDecision(id);
 
-  useEffect(() => {
-    if (!decision && decisions.length === 0) {
-      fetch(`/api/decisions?page=1&pageSize=10`)
-        .then(res => res.json())
-        .then(data => {
-          useDecisionStore.getState().setDecisions(data.data);
-        });
-    }
-  }, [decision, decisions.length]);
+  if (error) {
+    return <div>Error loading decision: {error.message}</div>;
+  }
 
-  return (
-    <TwoColumnLayout
-      sidebar={<DecisionsList />}
-    >
-      {decision ? (
-        <DecisionDetails decision={decision} />
-      ) : (
-        <DecisionForm />
-      )}
-    </TwoColumnLayout>
-  );
+  if (isLoading) {
+    return <div>Loading...</div>;
+  }
+
+  if (!decision) {
+    return <div>Decision not found</div>;
+  }
+
+  return <DecisionDetails decision={decision} />;
 } 

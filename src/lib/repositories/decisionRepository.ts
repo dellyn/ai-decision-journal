@@ -121,4 +121,25 @@ export async function getDecisions(
     page,
     pageSize
   };
-} 
+}
+
+export async function getDecisionById(id: string): Promise<DecisionRecord> {
+  const supabase = await getClient();
+
+  const { data, error } = await supabase
+    .from("decisions")
+    .select("*")
+    .eq("id", id)
+    .single();
+
+  if (error?.message) {
+    console.error("Supabase error:", error);
+    throw new Error(error.message || "Failed to fetch decision");
+  }
+
+  if (!data) {
+    throw new Error("Decision not found");
+  }
+
+  return data;
+}

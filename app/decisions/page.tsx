@@ -1,4 +1,3 @@
+import { DecisionForm } from "@/features/decision-form";
 
-export default function Page() {
-  return null;
-}
+export default DecisionForm
