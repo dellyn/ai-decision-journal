@@ -1,8 +1,8 @@
 import { ReactNode } from "react";
-import { checkAuth } from "@/features/auth";
 import { UserProfile } from "@/features/user-profile";
 import { InfoIcon } from "lucide-react";
 import { FetchDataSteps } from "@/components/tutorial/fetch-data-steps";
+import { checkAuth } from "@/features/auth/model/check-auth";
 
 interface AuthGuardProps {
   children?: ReactNode;

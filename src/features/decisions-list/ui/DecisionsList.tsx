@@ -9,6 +9,7 @@ import { Loader2 } from "lucide-react";
 import { cn } from "@/shared/utils";
 import { usePathname, useRouter } from "next/navigation";
 import { useDecisionStore } from "@/entities/decision";
+import { Routes } from "@/shared/routes";
 
 export function DecisionsList() {
   const [isLoading, setIsLoading] = useState(true);
@@ -42,7 +43,7 @@ export function DecisionsList() {
 
   const handleDecisionClick = (decisionId: string) => {
     setSelectedDecisionId(decisionId);
-    router.push(`/chat/${decisionId}`);
+    router.push(`${Routes.DECISIONS}/${decisionId}`);
   };
 
   if (isLoading) {
@@ -77,7 +78,7 @@ export function DecisionsList() {
           <DecisionListItem 
             key={decision.id} 
             decision={decision} 
-            isSelected={pathname === `/chat/${decision.id}`}
+            isSelected={pathname === `${Routes.DECISIONS}/${decision.id}`}
             onClick={() => handleDecisionClick(decision.id)}
           />
         ))}

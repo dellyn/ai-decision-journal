@@ -7,20 +7,16 @@ import { DecisionDetails } from "@/features/decision-details";
 import { useDecisionStore } from "@/entities/decision";
 import { useEffect } from "react";
 import { usePathname } from "next/navigation";
+import { Routes } from "@/shared/routes";
+import { Header } from "@/widgets/header";
 
-export default function ChatLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+export default function DecisionsLayout() {
   const pathname = usePathname();
   const { setSelectedDecisionId, selectedDecisionId, getDecisionById } = useDecisionStore();
   
-  // Extract decision ID from URL if present
   const decisionId = pathname.split('/').pop();
-  const isDecisionPage = decisionId && decisionId !== 'chat';
+  const isDecisionPage = decisionId && decisionId !== Routes.DECISIONS;
   
-  // Set initial decision ID from URL if present
   useEffect(() => {
     if (isDecisionPage) {
       setSelectedDecisionId(decisionId);
@@ -32,6 +28,8 @@ export default function ChatLayout({
   const decision = selectedDecisionId ? getDecisionById(selectedDecisionId) : null;
 
   return (
+    <div>
+    <Header />
     <TwoColumnLayout
       sidebar={<DecisionsList />}
     >
@@ -41,5 +39,6 @@ export default function ChatLayout({
         <DecisionForm />
       )}
     </TwoColumnLayout>
+    </div>
   );
 } 
