@@ -83,11 +83,12 @@ export function DecisionDetails({ decision }: DecisionDetailsProps) {
                 </div>
                 <div>
                   <h3 className="font-medium mb-2">Cognitive Biases</h3>
-                  <div className="flex flex-wrap gap-2">
+                  <div className="space-y-3">
                     {decision.analysis.biases.map((bias) => (
-                      <Badge key={bias} variant="outline">
-                        {bias}
-                      </Badge>
+                      <div key={bias.name} className="space-y-1">
+                        <Badge variant="outline">{bias.name}</Badge>
+                        <p className="text-sm text-muted-foreground">{bias.description}</p>
+                      </div>
                     ))}
                   </div>
                 </div>

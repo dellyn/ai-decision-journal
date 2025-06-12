@@ -1,12 +1,15 @@
-
-
 export type DecisionStatus = 'pending' | 'processing' | 'done' | 'error';
 
 export type DecisionCategory = 'Emotional' | 'Strategic' | 'Impulsive' | 'Rational';
 
+export interface Bias {
+  name: string;
+  description: string;
+}
+
 export type DecisionAnalysis = {
   category: DecisionCategory;
-  biases: string[];
+  biases: Bias[];
   alternatives: string[];
 };
 
