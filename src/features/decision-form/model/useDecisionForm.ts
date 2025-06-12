@@ -9,9 +9,9 @@ export function useDecisionForm() {
   const form = useForm<DecisionFormData>({
     resolver: zodResolver(decisionFormSchema),
     defaultValues: {
-      situation: "",
-      decision: "",
-      reasoning: "",
+      situation: "I have a problem with my relationship with my wife",
+      decision: "I sent her flowers",
+      reasoning: "I will try to fix it",
     },
   });
 

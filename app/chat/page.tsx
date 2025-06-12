@@ -1,2 +1,4 @@
-import { Chat } from "@/pages/Chat";
-export default Chat;
+
+export default function Page() {
+  return null;
+}

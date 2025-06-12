@@ -1,6 +1,7 @@
 export enum Routes {
   HOME = "/",
   PROTECTED = "/protected",
+  DECISIONS = "/chat",
   AUTH = "/auth",
   SIGN_UP = "/auth/sign-up",
   SIGN_UP_SUCCESS = "/auth/sign-up-success",

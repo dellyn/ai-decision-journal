@@ -4,5 +4,8 @@ import { ApiRoutes } from "@/shared/api/routes";
 
 export const decisionFormApi = {
   create: (data: DecisionFormData): Promise<Decision> => 
-    httpClient.post<Decision>(ApiRoutes.DECISIONS, data),
+    httpClient<Decision>(ApiRoutes.DECISIONS, {
+      method: "POST",
+      body: data,
+    }),
 }; 
