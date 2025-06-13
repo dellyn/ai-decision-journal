@@ -1,6 +1,6 @@
 export const Routes = {
   HOME: "/",
+  LOGIN: "/auth/login",
+  SIGN_UP: "/auth/sign-up",
   DECISIONS: "/decisions",
-  NEW_DECISION: "/decisions/new",
-  DECISION_DETAILS: (id: string) => `/decisions/${id}`,
 } as const; 

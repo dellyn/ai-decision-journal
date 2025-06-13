@@ -1,3 +1,5 @@
 import { DecisionForm } from "@/features/decision-form";
 
-export default DecisionForm
+export default function DecisionsPage() {
+  return <DecisionForm />;
+}

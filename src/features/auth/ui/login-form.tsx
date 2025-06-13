@@ -15,6 +15,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { authApi } from "@/shared/api/auth";
 import { AuthFormData, AuthState } from "@/entities/auth/types";
+import { Routes } from "@/shared/routes";
 
 export function LoginForm({
   className,
@@ -36,7 +37,7 @@ export function LoginForm({
 
     try {
       await authApi.login(formData);
-      router.push("/protected");
+      router.push(Routes.DECISIONS);
     } catch (error: unknown) {
       setState({
         isLoading: false,

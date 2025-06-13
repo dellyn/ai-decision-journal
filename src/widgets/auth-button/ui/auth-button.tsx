@@ -1,13 +1,9 @@
-// import { useUser } from "@/entities/user";
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { LogoutButton } from "@/features/auth";
 import { Button } from "@/shared/components/ui/button";
 
-export function AuthButton() {
-  // const user = useUser();
-  const user = {
-    email: "test@test.com",
-  }
 
+export function AuthButton({ user }: any) {
   return user ? (
     <div className="flex items-center gap-4">
       Hey, {user.email}!

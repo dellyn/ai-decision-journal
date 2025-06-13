@@ -1,4 +1,6 @@
 import { createClient } from "@/lib/supabase/client";
+import { Routes } from "../routes";
+
 export interface AuthFormData {
   email: string;
   password: string;
@@ -7,7 +9,6 @@ export interface AuthFormData {
 export interface SignUpFormData extends AuthFormData {
   repeatPassword: string;
 }
-
 
 export const authApi = {
   async login({ email, password }: AuthFormData) {
@@ -26,7 +27,7 @@ export const authApi = {
       email,
       password,
       options: {
-        emailRedirectTo: `${window.location.origin}/protected`,
+        emailRedirectTo: `${window.location.origin}${Routes.DECISIONS}`,
       },
     });
     if (error) throw error;

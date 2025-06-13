@@ -1,3 +1,4 @@
+import { AuthGuard } from "@/widgets/auth-guard";
 import { Header } from "@/widgets/header";
 import { DecisionsList } from "@/features/decisions-list";
 import { TwoColumnLayout } from "@/shared/layouts/TwoColumnLayout";
@@ -8,11 +9,13 @@ export default function DecisionsLayout({
   children: React.ReactNode;
 }) {
   return (
-    <div className="min-h-screen">
-      <Header />
-      <TwoColumnLayout sidebar={<DecisionsList />}>
-        {children}
-      </TwoColumnLayout>
-    </div>
+    <AuthGuard>
+      <div className="min-h-screen">
+        <Header />
+        <TwoColumnLayout sidebar={<DecisionsList />}>
+          {children}
+        </TwoColumnLayout>
+      </div>
+    </AuthGuard>
   );
 }

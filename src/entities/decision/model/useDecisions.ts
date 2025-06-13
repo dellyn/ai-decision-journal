@@ -38,6 +38,7 @@ export function useCreateDecision({onSuccess}: {onSuccess: (response: Decision) 
         body: JSON.stringify(data),
       }).then((res) => res.json()),
       onSuccess: (response) => {
+        console.log('onSuccess', response);
         onSuccess(response);
         queryClient.invalidateQueries({ queryKey: ["decisions"] });
         queryClient.setQueryData(["decision", response.id], response);

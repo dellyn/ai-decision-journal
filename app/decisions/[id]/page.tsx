@@ -3,7 +3,13 @@
 import { DecisionDetailsSlot } from "@/widgets/decision-slot";
 import { use } from "react";
 
-export default function DecisionPage({ params }: { params: Promise<{ id: string }> }) {
+interface DecisionPageProps {
+  params: Promise<{
+    id: string;
+  }>;
+}
+
+export default function DecisionPage({ params }: DecisionPageProps) {
   const { id } = use(params);
-  return <DecisionDetailsSlot id={id} />
+  return <DecisionDetailsSlot id={id} />;
 } 

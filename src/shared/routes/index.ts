@@ -1,6 +1,5 @@
 export enum Routes {
   HOME = "/",
-  PROTECTED = "/protected",
   DECISIONS = "/decisions",
   AUTH = "/auth",
   SIGN_UP = "/auth/sign-up",
