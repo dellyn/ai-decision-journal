@@ -7,8 +7,11 @@ export interface SignUpFormData extends AuthFormData {
   repeatPassword: string;
 }
 
+export interface AuthError {
+  message: string;
+}
 
 export interface AuthState {
   isLoading: boolean;
-  error: unknown;
+  error: AuthError | null;
 } 

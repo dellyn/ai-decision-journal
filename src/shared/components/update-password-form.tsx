@@ -14,7 +14,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
-import { Routes } from "../constants";
+import { Routes } from "@/shared/routes";
 
 export function UpdatePasswordForm({
   className,

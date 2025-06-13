@@ -111,9 +111,9 @@ export function SignUpForm({
                   }
                 />
               </div>
-              {state?.error ? (
-                <p className="text-sm text-red-500">{state.error?.message}</p>
-              ) : null}
+              {state.error?.message && (
+                <p className="text-sm text-red-500">{state.error.message}</p>
+              )}
               <Button type="submit" className="w-full" disabled={state.isLoading}>
                 {state.isLoading ? "Creating an account..." : "Sign up"}
               </Button>

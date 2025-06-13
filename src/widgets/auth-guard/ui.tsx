@@ -1,7 +1,4 @@
 import { ReactNode } from "react";
-import { UserProfile } from "@/features/user-profile";
-import { InfoIcon } from "lucide-react";
-import { FetchDataSteps } from "@/components/tutorial/fetch-data-steps";
 import { createClient } from "@/lib/supabase/server";
 import { redirect } from "next/navigation";
 import { Routes } from "@/shared/routes";
