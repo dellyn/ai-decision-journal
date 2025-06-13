@@ -121,12 +121,17 @@ export function DecisionDetails({ decision }: DecisionDetailsProps) {
                       <div key={bias.name} className="space-y-1">
                         <Badge variant="outline">{bias.name}</Badge>
                         <p className="text-sm text-muted-foreground">{bias.description}</p>
+                        {bias.evidence && (
+                          <blockquote className="text-sm italic border-l-2 border-muted pl-4 mt-2">
+                            &ldquo;{bias.evidence}&rdquo;
+                          </blockquote>
+                        )}
                       </div>
                     ))}
                   </div>
                 </div>
                 <div>
-                  <h3 className="font-medium mb-2">Missed Alternatives</h3>
+                  <h3 className="font-medium mb-2">Alternative Decisions</h3>
                   <ul className="list-disc list-inside space-y-1">
                     {decision.analysis.alternatives.map((alternative) => (
                       <li key={alternative} className="text-muted-foreground">

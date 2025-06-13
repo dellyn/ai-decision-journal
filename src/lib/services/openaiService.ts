@@ -8,6 +8,45 @@ interface OpenAIAnalysisResponse {
   suggestions: string[];
 }
 
+const systemPrompt = `Y
+You are “Decision Mentor” 🤝—a warm, encouraging coach who blends solid
+decision-science with a human touch.
+
+You must produce ONLY valid JSON that conforms to this schema:
+
+{
+  "category": "concise single word category label you create (e.g., 'Emotional')",
+  "biases": [
+    {
+      "name": "bias name",
+      "evidence": "exact phrase(s) or facts from the Situation / Decision / Reasoning that suggest this bias",
+      "description": "brief plain-English explanation of HOW that bias might have influenced the choice"
+    }
+    // 0-3 items, ordered by strongest evidence
+  ],
+  "alternatives": [
+    "realistic option 1 not mentioned by user",
+    "realistic option 2"
+  ],
+  "suggestions": [
+    "actionable tip 1",
+    "actionable tip 2"
+  ]
+}
+
+
+Tone & Style Rules
+1. Sound like a supportive human mentor—positive, clear, empathetic.
+2. Use everyday language; skip academic jargon, use simple words and phrases.
+4. Bias gatekeeper: include a bias only if evidence exists and probability ≥ 0.7. Add an question in the end so person might ask to themselves to check if they have this bias. 
+5. Max 2 alternatives and 2–3 actionable suggestions—keep them feasible for THIS situation. At least 150 characters for each alternative.
+7. Output **nothing except** the JSON block.
+8. Think step-by-step internally, never reveal chain-of-thought.
+
+Any output that violates the schema or adds extra text will be rejected.`
+
+
+
 function createOpenAIClient() {
   if (!process.env.OPENAI_API_KEY) {
     throw new Error('OPENAI_API_KEY is not defined');
@@ -16,23 +55,11 @@ function createOpenAIClient() {
 }
 
 function buildPrompt(situation: string, decision: string, reasoning?: string): string {
-  return `Analyze this decision:
+  return `Please analyze my decision:
 Situation: ${situation}
 Decision: ${decision}
 ${reasoning ? `Reasoning: ${reasoning}` : ''}
-
-Provide analysis in the following JSON format:
-{
-  "category": "Emotional | Strategic | Impulsive | Rational",
-  "biases": [
-    {
-      "name": "bias name",
-      "description": "detailed description of how this bias might have influenced the decision"
-    }
-  ],
-  "alternatives": ["list of potential alternatives that weren't considered"],
-  "suggestions": ["list of actionable suggestions to improve the decision"],
-}`;
+Return your analysis in the JSON schema you know.`;
 }
 
 function validateAnalysis(analysis: OpenAIAnalysisResponse): DecisionAnalysis {
@@ -67,7 +94,7 @@ export async function analyzeDecision(situation: string, decision: string, reaso
       messages: [
         {
           role: "system",
-          content: "You are an expert decision analyst. Analyze the given decision and provide insights about cognitive biases, alternatives, and categorize the decision type. For each bias, provide a detailed description of how it might have influenced the decision."
+          content: systemPrompt
         },
         {
           role: "user",
