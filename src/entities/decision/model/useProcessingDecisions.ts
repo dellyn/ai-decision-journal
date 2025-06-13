@@ -4,6 +4,7 @@ import { Decision, DecisionStatus } from "./types";
 const API_URL = "/api/decisions";
 
 export function useProcessingDecisions(decisions: Decision[]  = []) {
+  console.log('decisions', decisions);
   const queryClient = useQueryClient();
   const processingDecisions = decisions.filter(
     (decision) => decision.status === DecisionStatus.PROCESSING
