@@ -18,7 +18,7 @@ export function SideBar() {
       <div className="p-4">
         <Button 
           variant="default" 
-          className="w-full shadow-md font-bold"
+          className="w-full shadow-md font-bold p-6 text-md"
           onClick={handleAddDecision}
         >
           <Plus className="h-5 w-5 mr-2" />

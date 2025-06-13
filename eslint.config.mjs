@@ -12,6 +12,7 @@ const compat = new FlatCompat({
 const eslintConfig = [
   ...compat.extends("next/core-web-vitals", "next/typescript"),
   {
+    // TODO: improve handling of import restrictions (e.g. prevent features from importing other features, but allow './' imports)
     rules: {
       "import/no-restricted-paths": [
         "error",

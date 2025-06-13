@@ -15,6 +15,7 @@ import {
 import { DecisionFormData } from "@/entities/decision/model/types";
 import { Routes } from "@/shared/routes";
 import { useCreateDecision } from "@/entities/decision";
+import { PageHeader } from "@/shared/components/ui/page-header";
 
 export function DecisionForm() {
   const router = useRouter();
@@ -29,71 +30,76 @@ export function DecisionForm() {
     createDecision(data);
   };
 
+  const handleClose = () => {
+    router.push(Routes.DECISIONS);
+  };
+
   return (
-    <div className="w-full h-full overflow-y-auto p-6">
-      <h1 className="text-2xl font-semibold mb-6">New Decision</h1>
+    <div className="w-full h-full flex flex-col">
+      <PageHeader title="New Decision" onClose={handleClose} />
+      <div className="flex-1 overflow-y-auto p-6">
+        <Form {...form}>
+          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+            <FormField
+              control={form.control}
+              name="situation"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Situation</FormLabel>
+                  <FormControl>
+                    <Textarea
+                      placeholder="Describe the situation you faced..."
+                      className="min-h-[100px]"
+                      {...field}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
 
-      <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
-          <FormField
-            control={form.control}
-            name="situation"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Situation</FormLabel>
-                <FormControl>
-                  <Textarea
-                    placeholder="Describe the situation you faced..."
-                    className="min-h-[100px]"
-                    {...field}
-                  />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
+            <FormField
+              control={form.control}
+              name="decision"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Decision</FormLabel>
+                  <FormControl>
+                    <Textarea
+                      placeholder="What decision did you make?"
+                      className="min-h-[100px]"
+                      {...field}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
 
-          <FormField
-            control={form.control}
-            name="decision"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Decision</FormLabel>
-                <FormControl>
-                  <Textarea
-                    placeholder="What decision did you make?"
-                    className="min-h-[100px]"
-                    {...field}
-                  />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
+            <FormField
+              control={form.control}
+              name="reasoning"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Reasoning (Optional)</FormLabel>
+                  <FormControl>
+                    <Textarea
+                      placeholder="Why did you make this decision?"
+                      className="min-h-[100px]"
+                      {...field}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
 
-          <FormField
-            control={form.control}
-            name="reasoning"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Reasoning (Optional)</FormLabel>
-                <FormControl>
-                  <Textarea
-                    placeholder="Why did you make this decision?"
-                    className="min-h-[100px]"
-                    {...field}
-                  />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-
-          <Button type="submit" disabled={isPending} className="w-full">
-            {isPending ? "Saving..." : "Save Decision"}
-          </Button>
-        </form>
-      </Form>
+            <Button type="submit" disabled={isPending} className="w-full">
+              {isPending ? "Saving..." : "Save Decision"}
+            </Button>
+          </form>
+        </Form>
+      </div>
     </div>
   );
 } 
