@@ -48,7 +48,7 @@ export function DecisionsList() {
 
   return (
     <div className="h-full flex flex-col">
-      <div className="flex-1 overflow-y-auto space-y-2 p-4">
+      <div className="flex-1 overflow-y-auto space-y-2 p-4 scrollbar scrollbar-w-2 scrollbar-thumb-rounded scrollbar-thumb-gray-300 scrollbar-track-transparent hover:scrollbar-thumb-gray-400">
         {data.data.map((decision) => (
           <DecisionListItem 
             key={decision.id} 

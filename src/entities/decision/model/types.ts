@@ -11,8 +11,7 @@ export type DecisionCategory = 'Emotional' | 'Strategic' | 'Impulsive' | 'Ration
 export interface Bias {
   name: string;
   description: string;
-  impact: "positive" | "negative" | "neutral";
-  explanation: string;
+  evidence: string;
 }
 
 export type DecisionAnalysis = {

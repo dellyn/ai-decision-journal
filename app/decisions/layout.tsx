@@ -10,7 +10,7 @@ export default function DecisionsLayout({
 }) {
   return (
     <AuthGuard>
-      <div className="min-h-screen">
+      <div className="min-h-screen mx-auto">
         <Header />
         <TwoColumnLayout sidebar={<SideBar />}>
           {children}
