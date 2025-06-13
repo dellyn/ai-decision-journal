@@ -1,11 +1,11 @@
 "use client";
-
 import { Button } from "@/shared/components/ui/button";
 import { Plus } from "lucide-react";
 import { DecisionsList } from "@/features/decisions-list";
 import { useRouter } from "next/navigation";
 import { Routes } from "@/shared/routes";
 
+// TODO: move button to an entity
 export function SideBar() {
   const router = useRouter();
 
@@ -18,10 +18,10 @@ export function SideBar() {
       <div className="p-4">
         <Button 
           variant="default" 
-          className="w-full shadow-md"
+          className="w-full shadow-md font-bold"
           onClick={handleAddDecision}
         >
-          <Plus className="h-4 w-4 mr-2" />
+          <Plus className="h-5 w-5 mr-2" />
           Add Decision
         </Button>
       </div>

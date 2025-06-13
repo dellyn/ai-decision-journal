@@ -24,7 +24,6 @@ export async function createDecision(data: DecisionFormData, userId: string): Pr
     .select()
     .single();
 
-  console.log(1, decision)
   if (error?.message) {
     console.error("Supabase error:", error);
     throw new Error(error.message || "Failed to create decision");

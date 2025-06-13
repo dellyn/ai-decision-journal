@@ -5,8 +5,8 @@ import { Loader2 } from "lucide-react";
 import { Badge } from "@/shared/components/ui/badge";
 
 function getSummaryTitle(situation: string): string {
-  const words = situation.split(/\s+/);
-  return words.slice(0, 6).join(" ") + (words.length > 4 ? "..." : "");
+  const words = situation?.split(/\s+/);
+  return words?.slice(0, 6)?.join(" ") + (words?.length > 4 ? "..." : "");
 }
 
 export function DecisionListItem({ 

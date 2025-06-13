@@ -1,15 +1,13 @@
 "use client";
-
-import { Decision } from "@/entities/decision";
-import { Card } from "@/shared/components/ui/card";
-import { Badge } from "@/shared/components/ui/badge";
-import { Loader2, X } from "lucide-react";
-import { Button } from "@/shared/components/ui/button";
 import { useRouter } from "next/navigation";
-import { Routes } from "@/shared/routes";
+import { Loader2, X } from "lucide-react";
+import { Decision } from "@/entities/decision";
 import { useUpdateDecision } from "@/entities/decision/model/useDecisions";
 import { DecisionStatus } from "@/entities/decision/model/types";
-
+import { Card } from "@/shared/components/ui/card";
+import { Badge } from "@/shared/components/ui/badge";
+import { Button } from "@/shared/components/ui/button";
+import { Routes } from "@/shared/routes";
 interface DecisionDetailsProps {
   decision: Decision;
 }
@@ -92,7 +90,7 @@ export function DecisionDetails({ decision }: DecisionDetailsProps) {
               <Card className="p-6">
                 <div className="flex items-center gap-2">
                   <Loader2 className="h-4 w-4 animate-spin" />
-                  <p>Analyzing decision...</p>
+                  <p className="text-muted-foreground">Our AI is analyzing your decision to provide personalized insights...</p>
                 </div>
               </Card>
             ) : decision.status === "error" ? (
@@ -128,29 +126,37 @@ export function DecisionDetails({ decision }: DecisionDetailsProps) {
                   </div>
                   <div>
                     <h3 className="font-medium mb-2 mt-8">Cognitive Biases</h3>
-                    <div className="space-y-3">
-                      {decision.analysis.biases.map((bias) => (
-                        <div key={bias.name} className="space-y-1 mb-4">
-                          <Badge variant="outline" className="mb-2">{bias.name}</Badge>
-                          <p className="text-sm text-muted-foreground pt-2">{bias.description}</p>
-                           {bias.evidence && (
-                            <blockquote className="text-sm italic border-l-2 border-muted pl-4">
-                              &ldquo;{bias.evidence}&rdquo;
-                            </blockquote>
-                          )}
-                        </div>
-                      ))}
-                    </div>
+                    {decision.analysis.biases.length > 0 ? (
+                      <div className="space-y-3">
+                        {decision.analysis.biases.map((bias) => (
+                          <div key={bias.name} className="space-y-1 mb-4">
+                            <Badge variant="outline" className="mb-2">{bias.name}</Badge>
+                            <p className="text-sm text-muted-foreground pt-2">{bias.description}</p>
+                             {bias.evidence && (
+                              <blockquote className="text-sm italic border-l-2 border-muted pl-4">
+                                &ldquo;{bias.evidence}&rdquo;
+                              </blockquote>
+                            )}
+                          </div>
+                        ))}
+                      </div>
+                    ) : (
+                      <p className="text-sm text-muted-foreground">No cognitive biases detected in this decision.</p>
+                    )}
                   </div>
                   <div>
                     <h3 className="font-medium mt-2 mt-8">Alternative Decisions</h3>
-                    <ul className="list-disc list-inside space-y-1">
-                      {decision.analysis.alternatives.map((alternative) => (
-                        <li key={alternative} className="text-muted-foreground">
-                          {alternative}
-                        </li>
-                      ))}
-                    </ul>
+                    {decision.analysis.alternatives.length > 0 ? (
+                      <ul className="list-disc list-inside space-y-1">
+                        {decision.analysis.alternatives.map((alternative) => (
+                          <li key={alternative} className="text-muted-foreground">
+                            {alternative}
+                          </li>
+                        ))}
+                      </ul>
+                    ) : (
+                      <p className="text-sm text-muted-foreground">No alternative decisions suggested.</p>
+                    )}
                   </div>
                 </div>
               </Card>

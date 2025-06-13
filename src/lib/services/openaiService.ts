@@ -22,7 +22,7 @@ Tone & Style Rules
 You must produce ONLY valid JSON that conforms to this schema:
 
 {
-  "category": "concise single word category label you create (e.g., 'Emotional')",
+  "category": "concise single word category of the decision type label you create (e.g., 'Emotional')",
   "biases": [
     {
       "name": "bias name",

@@ -9,6 +9,7 @@ import { useProcessingDecisions } from "@/entities/decision/model/useProcessingD
 import { useDecisions } from "@/entities/decision/model/useDecisions";
 import { DecisionListItem } from "./DecisionListItem";
 
+// TODO: move to widgets
 export function DecisionsList() {
   const [pageNumber, setPageNumber] = useState(1);
   const { data, isLoading, error } = useDecisions(pageNumber, 10);
@@ -16,7 +17,6 @@ export function DecisionsList() {
   const router = useRouter();
 
   useProcessingDecisions(data?.data);
-
   const handleDecisionClick = (decisionId: string) => {
     router.push(`${Routes.DECISIONS}/${decisionId}`);
   };
@@ -49,9 +49,9 @@ export function DecisionsList() {
   return (
     <div className="h-full flex flex-col">
       <div className="flex-1 overflow-y-auto space-y-2 p-4 scrollbar scrollbar-w-2 scrollbar-thumb-rounded scrollbar-thumb-gray-300 scrollbar-track-transparent hover:scrollbar-thumb-gray-400">
-        {data.data.map((decision) => (
+        {data.data?.map((decision) => (
           <DecisionListItem 
-            key={decision.id} 
+            key={decision?.id} 
             decision={decision} 
             isSelected={pathname === `${Routes.DECISIONS}/${decision.id}`}
             onClick={() => handleDecisionClick(decision.id)}

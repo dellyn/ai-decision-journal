@@ -6,8 +6,8 @@ import { z } from "zod";
 import { DecisionFormData } from "@/entities/decision/model/types";
 
 const decisionFormSchema = z.object({
-  situation: z.string().min(1, "Situation is required"),
-  decision: z.string().min(1, "Decision is required"),
+  situation: z.string().min(10, "Situation must be at least 10 characters"),
+  decision: z.string().min(10, "Decision must be at least 10 characters"),
   reasoning: z.string().optional(),
 });
 

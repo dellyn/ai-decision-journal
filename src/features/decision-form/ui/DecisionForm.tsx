@@ -25,7 +25,6 @@ export function DecisionForm() {
   });
 
   const form = useDecisionForm();
-
   const onSubmit = (data: DecisionFormData) => {
     createDecision(data);
   };
