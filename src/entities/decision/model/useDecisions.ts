@@ -37,11 +37,24 @@ export function useCreateDecision({onSuccess}: {onSuccess: (response: Decision) 
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(data),
       }).then((res) => res.json()),
-      onSuccess: (response) => {
-        console.log('onSuccess', response);
-        onSuccess(response);
-        queryClient.invalidateQueries({ queryKey: ["decisions"] });
-        queryClient.setQueryData(["decision", response.id], response);
+    onSuccess: (response) => {
+      onSuccess(response);
+      
+      // Update the decisions list cache
+      queryClient.setQueryData<PaginatedResponse>(
+        ["decisions", 1, 10],
+        (old) => {
+          if (!old) return { data: [response], total: 1, page: 1, pageSize: 10 };
+          return {
+            ...old,
+            data: [response, ...old.data],
+            total: old.total + 1,
+          };
+        }
+      );
+
+      // Set the individual decision cache
+      queryClient.setQueryData(["decision", response.id], response);
     },
   });
 }

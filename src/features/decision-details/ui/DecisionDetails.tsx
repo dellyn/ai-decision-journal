@@ -3,7 +3,7 @@
 import { Decision } from "@/entities/decision";
 import { Card } from "@/shared/components/ui/card";
 import { Badge } from "@/shared/components/ui/badge";
-import { Loader2, X } from "lucide-react";
+import { Loader2, X, Plus } from "lucide-react";
 import { Button } from "@/shared/components/ui/button";
 import { useRouter } from "next/navigation";
 import { Routes } from "@/shared/routes";
@@ -12,6 +12,31 @@ import { DecisionStatus } from "@/entities/decision/model/types";
 
 interface DecisionDetailsProps {
   decision: Decision;
+}
+
+function DecisionDetailsHeader({ onClose }: { onClose: () => void }) {
+  const router = useRouter();
+
+  const handleAddDecision = () => {
+    router.push(Routes.DECISIONS);
+  };
+
+  return (
+    <div className="sticky top-0 z-10 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 border-b">
+      <div className="flex items-center justify-between p-6">
+        <div className="flex items-center gap-4">
+          <Button
+            variant="ghost"
+            size="icon"
+            onClick={onClose}
+          >
+            <X className="h-4 w-4" />
+          </Button>
+          <h1 className="text-2xl font-semibold">Decision Details</h1>
+        </div>
+      </div>
+    </div>
+  );
 }
 
 export function DecisionDetails({ decision }: DecisionDetailsProps) {
@@ -46,18 +71,8 @@ export function DecisionDetails({ decision }: DecisionDetailsProps) {
 
   return (
     <div className="w-full h-full overflow-y-auto">
+      <DecisionDetailsHeader onClose={handleClose} />
       <div className="p-6">
-        <div className="flex items-center gap-4 mb-6">
-          <Button
-            variant="ghost"
-            size="icon"
-            onClick={handleClose}
-          >
-            <X className="h-4 w-4" />
-          </Button>
-          <h1 className="text-2xl font-semibold">Decision Details</h1>
-        </div>
-
         <div className="space-y-6">
           <Card className="p-6">
             <h2 className="text-lg font-semibold mb-2">Situation</h2>

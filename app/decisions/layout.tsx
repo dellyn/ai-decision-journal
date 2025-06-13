@@ -1,7 +1,7 @@
 import { AuthGuard } from "@/widgets/auth-guard";
 import { Header } from "@/widgets/header";
-import { DecisionsList } from "@/features/decisions-list";
 import { TwoColumnLayout } from "@/shared/layouts/TwoColumnLayout";
+import { SideBar } from "@/widgets/sidebar/ui/SideBar";
 
 export default function DecisionsLayout({
   children,
@@ -12,7 +12,7 @@ export default function DecisionsLayout({
     <AuthGuard>
       <div className="min-h-screen">
         <Header />
-        <TwoColumnLayout sidebar={<DecisionsList />}>
+        <TwoColumnLayout sidebar={<SideBar />}>
           {children}
         </TwoColumnLayout>
       </div>
