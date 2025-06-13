@@ -1,5 +1,5 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { Decision, DecisionFormData } from "./types";
+import { Decision, DecisionFormData, DecisionStatus } from "./types";
 
 const API_URL = "/api/decisions";
 
@@ -49,16 +49,38 @@ export function useCreateDecision({onSuccess}: {onSuccess: (response: Decision) 
 export function useUpdateDecision() {
   const queryClient = useQueryClient();
   
-  return useMutation<{ data: Decision }, Error, { id: string; data: Partial<Decision> }>({
-    mutationFn: ({ id, data }) =>
-      fetch(`${API_URL}/${id}`, {
+  return useMutation<Decision, Error, { id: string; data: Partial<Decision> }>({
+    mutationFn: async ({ id, data }) => {
+      // If we're retrying analysis, use the retry endpoint
+      if (data.status === DecisionStatus.PROCESSING) {
+        const response = await fetch(`${API_URL}/${id}/retry`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+        });
+
+        if (!response.ok) {
+          throw new Error('Failed to retry analysis');
+        }
+
+        return response.json();
+      }
+
+      // Otherwise use the regular update endpoint
+      const response = await fetch(`${API_URL}/${id}`, {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(data),
-      }).then((res) => res.json()),
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to update decision');
+      }
+
+      return response.json();
+    },
     onSuccess: (response) => {
       queryClient.invalidateQueries({ queryKey: ["decisions"] });
-      queryClient.setQueryData(["decision", response.data.id], response);
+      queryClient.setQueryData(["decision", response.id], response);
     },
   });
 }

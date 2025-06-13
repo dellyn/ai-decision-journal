@@ -16,17 +16,24 @@ interface DecisionDetailsProps {
 
 export function DecisionDetails({ decision }: DecisionDetailsProps) {
   const router = useRouter();
-  const { mutate: retryAnalysis } = useUpdateDecision();
+  const { mutate: retryAnalysis, isPending } = useUpdateDecision();
 
   const handleClose = () => {
     router.push(Routes.DECISIONS);
   };
 
   const handleRetry = () => {
-    retryAnalysis({
-      id: decision.id,
-      data: { status: DecisionStatus.PROCESSING }
-    });
+    retryAnalysis(
+      {
+        id: decision.id,
+        data: { status: DecisionStatus.PROCESSING }
+      },
+      {
+        onError: (error) => {
+          console.error('Failed to retry analysis:', error);
+        }
+      }
+    );
   };
 
   if (!decision) {
@@ -69,7 +76,7 @@ export function DecisionDetails({ decision }: DecisionDetailsProps) {
             </Card>
           )}
 
-          {decision.status === DecisionStatus.PROCESSING ? (
+          {decision.status === DecisionStatus.PROCESSING || isPending ? (
             <Card className="p-6">
               <div className="flex items-center gap-2">
                 <Loader2 className="h-4 w-4 animate-spin" />
@@ -83,14 +90,25 @@ export function DecisionDetails({ decision }: DecisionDetailsProps) {
                   <Badge variant="destructive">Error</Badge>
                   <p>Failed to analyze decision</p>
                 </div>
-                <Button variant="outline" onClick={handleRetry}>
-                  Retry Analysis
+                <Button 
+                  variant="outline" 
+                  onClick={handleRetry}
+                  disabled={isPending}
+                >
+                  {isPending ? (
+                    <>
+                      <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                      Retrying...
+                    </>
+                  ) : (
+                    'Retry Analysis'
+                  )}
                 </Button>
               </div>
             </Card>
           ) : decision.analysis ? (
             <Card className="p-6">
-              <h2 className="text-lg font-semibold mb-4">Analysis</h2>
+              <h3 className="font-semibold mb-4 px-4 py-2 bg-gradient-to-r from-blue-600 via-blue-500 to-blue-400 text-white rounded-lg shadow-md w-fit">AI Analysis</h3>
               <div className="space-y-4">
                 <div>
                   <h3 className="font-medium mb-2">Category</h3>

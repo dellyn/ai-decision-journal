@@ -2,7 +2,7 @@ import { createClient } from "@/lib/supabase/client";
 
 const BASE_URL = process.env.NEXT_PUBLIC_VERCEL_URL
   ? `https://ai-decision-journal-azgysnyqk-dellyns-projects.vercel.app`
-  : "http://localhost:3000";
+  : "https://ai-decision-journal.vercel.app";
 
 export interface AuthFormData {
   email: string;
@@ -26,7 +26,7 @@ export const authApi = {
 
   async signUp({ email, password }: SignUpFormData) {
     const supabase = createClient();
-    cjonst { error } = await supabase.auth.signUp({
+    const { error } = await supabase.auth.signUp({
       email,
       password,
       options: {

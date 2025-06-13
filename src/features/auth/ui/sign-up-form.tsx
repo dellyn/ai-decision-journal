@@ -62,7 +62,7 @@ export function SignUpForm({
       <Card>
         <CardHeader>
           <CardTitle className="text-2xl">Sign up</CardTitle>
-          <CardDescription>Create a new account</CardDescription>
+          <CardDescription>Create an account</CardDescription>
         </CardHeader>
         <CardContent>
           <form onSubmit={handleSignUp}>

@@ -15,8 +15,7 @@ export function DecisionsList() {
   const pathname = usePathname();
   const router = useRouter();
 
-  console.log(data)
-  useProcessingDecisions(data?.data || []);
+  useProcessingDecisions(data?.data);
 
   const handleDecisionClick = (decisionId: string) => {
     router.push(`${Routes.DECISIONS}/${decisionId}`);
@@ -50,7 +49,7 @@ export function DecisionsList() {
   return (
     <div className="h-full flex flex-col">
       <div className="flex-1 overflow-y-auto space-y-2 p-4">
-        {data.data?.map((decision) => (
+        {data.data.map((decision) => (
           <DecisionListItem 
             key={decision.id} 
             decision={decision} 
@@ -61,20 +60,7 @@ export function DecisionsList() {
       </div>
 
       <div className="flex justify-center gap-2 p-4 border-t">
-        <Button
-          variant="outline"
-          disabled={pageNumber === 1}
-          onClick={() => setPageNumber(pageNumber - 1)}
-        >
-          Previous
-        </Button>
-        <Button
-          variant="outline"
-          disabled={data.data?.length < 10}
-          onClick={() => setPageNumber(pageNumber + 1)}
-        >
-          Next
-        </Button>
+        TODO: Pagination
       </div>
     </div>
   );

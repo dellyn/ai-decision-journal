@@ -5,7 +5,7 @@ import "./globals.css";
 
 const defaultUrl = process.env.VERCEL_URL
   ? `https://${process.env.VERCEL_URL}`
-  : "https://ai-decision-journal.vercel.app";
+  : "https://ai-decision-journal.vercel.app"; // TODO: rely on env variable
 
 export const metadata: Metadata = {
   metadataBase: new URL(defaultUrl),

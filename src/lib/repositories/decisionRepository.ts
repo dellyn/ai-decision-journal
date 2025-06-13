@@ -74,6 +74,31 @@ export async function updateDecisionAnalysis(
   }
 }
 
+export async function updateDecision(
+  decisionId: string,
+  data: Partial<DecisionRecord>
+): Promise<DecisionRecord> {
+  const supabase = await getClient();
+  
+  const { data: decision, error } = await supabase
+    .from("decisions")
+    .update(data)
+    .eq("id", decisionId)
+    .select()
+    .single();
+
+  if (error?.message) {
+    console.error("Supabase error:", error);
+    throw new Error(error.message || "Failed to update decision");
+  }
+
+  if (!decision) {
+    throw new Error("Decision not found");
+  }
+
+  return decision;
+}
+
 export interface PaginatedDecisions {
   data: DecisionRecord[];
   total: number;

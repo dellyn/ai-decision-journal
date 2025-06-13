@@ -19,16 +19,15 @@ import { useCreateDecision } from "@/entities/decision";
 export function DecisionForm() {
   const router = useRouter();
   const { mutate: createDecision, isPending } = useCreateDecision({
-    onSuccess: (response) => {
-      router.push(`${Routes.DECISIONS}/${response.id}`);
+    onSuccess: (decision) => {
+      router.push(`${Routes.DECISIONS}/${decision.id}`);
     }
   });
 
   const form = useDecisionForm();
 
   const onSubmit = (data: DecisionFormData) => {
-    console.log('onSubmit')
-   createDecision(data);
+    createDecision(data);
   };
 
   return (
@@ -92,7 +91,7 @@ export function DecisionForm() {
           />
 
           <Button type="submit" disabled={isPending} className="w-full">
-            {isPending ? "Creating..." : "Create Decision"}
+            {isPending ? "Saving..." : "Save Decision"}
           </Button>
         </form>
       </Form>
