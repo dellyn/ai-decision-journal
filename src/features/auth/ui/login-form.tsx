@@ -14,7 +14,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { authApi } from "@/shared/api/auth";
-import { AuthFormData, AuthState } from "@/shared/types/auth";
+import { AuthFormData, AuthState } from "@/entities/auth/types";
 
 export function LoginForm({
   className,
@@ -26,13 +26,13 @@ export function LoginForm({
   });
   const [state, setState] = useState<AuthState>({
     isLoading: false,
-    error: null,
+    error: '',
   });
   const router = useRouter();
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
-    setState({ isLoading: true, error: null });
+    setState({ isLoading: true, error: '' });
 
     try {
       await authApi.login(formData);
@@ -40,9 +40,7 @@ export function LoginForm({
     } catch (error: unknown) {
       setState({
         isLoading: false,
-        error: {
-          message: error instanceof Error ? error.message : "An error occurred",
-        },
+        error: error instanceof Error ? error.message : "An error occurred",
       });
     }
   };
@@ -92,9 +90,9 @@ export function LoginForm({
                   }
                 />
               </div>
-              {state.error && (
-                <p className="text-sm text-red-500">{state.error.message}</p>
-              )}
+              {state?.error ? (
+                <p className="text-sm text-red-500">{state?.error as string}</p>
+              ) : null}
               <Button type="submit" className="w-full" disabled={state.isLoading}>
                 {state.isLoading ? "Logging in..." : "Login"}
               </Button>
@@ -110,4 +108,4 @@ export function LoginForm({
       </Card>
     </div>
   );
-} 
+}

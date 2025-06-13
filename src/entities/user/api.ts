@@ -1,5 +1,5 @@
 import { createClient } from "@/lib/supabase/server";
-import { UserResponse } from "./types";
+import { UserResponse } from "./model/types";
 
 export async function getCurrentUser(): Promise<UserResponse> {
   const supabase = await createClient();

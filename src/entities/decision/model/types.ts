@@ -1,11 +1,10 @@
+export type { DecisionFormData } from './schema';
+
 export enum DecisionStatus {
-  PENDING = 'pending',
   PROCESSING = 'processing',
   DONE = 'done',
   ERROR = 'error',
 }
-
-export type DecisionStatus = 'processing' | 'done' | 'error';
 
 export type DecisionCategory = 'Emotional' | 'Strategic' | 'Impulsive' | 'Rational';
 
@@ -18,13 +17,14 @@ export interface Bias {
 
 export type DecisionAnalysis = {
   category: DecisionCategory;
+  alternatives: string[];
   biases: Bias[];
   suggestions: string[];
-  score: number;
 };
 
 export interface Decision {
   id: string;
+  status: DecisionStatus;
   situation: string;
   decision: string;
   reasoning?: string;
@@ -35,8 +35,3 @@ export interface Decision {
 
 export type DecisionResponse = Omit<Decision, 'userId'>
 
-export interface DecisionFormData {
-  situation: string;
-  decision: string;
-  reasoning?: string;
-} 

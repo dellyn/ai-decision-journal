@@ -36,7 +36,7 @@ export function DecisionDetailsSlot({ id }: DecisionDetailsSlotProps) {
     );
   }
 
-  if (!decision.id) {
+  if (!decision?.id) {
     return (
       <div className="flex min-h-[calc(100vh-4rem)] items-center justify-center">
         <ErrorState

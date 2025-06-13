@@ -1,7 +1,6 @@
 import { Card } from "@/shared/components/ui/card";
 import { cn } from "@/shared/utils";
-import { DecisionRecord } from "@/lib/repositories/decisionRepository";
-import { DecisionStatus } from "@/entities/decision/model/types";
+import { Decision, DecisionStatus } from "@/entities/decision";
 import { Loader2 } from "lucide-react";
 import { Badge } from "@/shared/components/ui/badge";
 
@@ -15,7 +14,7 @@ export function DecisionListItem({
   isSelected,
   onClick
 }: { 
-  decision: DecisionRecord; 
+  decision: Decision; 
   isSelected: boolean;
   onClick: () => void;
 }) {

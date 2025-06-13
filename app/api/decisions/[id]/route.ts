@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase/server";
 import { getDecisionById } from "@/lib/repositories/decisionRepository";
@@ -6,9 +7,9 @@ export const revalidate = 60;
 
 export async function GET(
   request: Request,
-  { params }: { params: { id: string } }
+  { params }: any
 ) {
-  const { id } = await params;
+  const { id } = params;
 
   try {
     const supabase = await createClient();
@@ -28,10 +29,10 @@ export async function GET(
         'Cache-Control': 'public, s-maxage=60, stale-while-revalidate=30',
       },
     });
-  } catch (error) {
+  } catch (error: unknown) {
     console.error("Error fetching decision:", error);
     
-    if (error.message === "Decision not found") {
+    if (error instanceof Error && error.message === "Decision not found") {
       return NextResponse.json(
         { message: "Decision not found" },
         { status: 404 }

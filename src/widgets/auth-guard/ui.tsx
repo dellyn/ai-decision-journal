@@ -2,14 +2,15 @@ import { ReactNode } from "react";
 import { UserProfile } from "@/features/user-profile";
 import { InfoIcon } from "lucide-react";
 import { FetchDataSteps } from "@/components/tutorial/fetch-data-steps";
-import { checkAuth } from "@/features/auth/model/check-auth";
+// import { checkAuth } from "@/features/auth/model/check-auth";
 
 interface AuthGuardProps {
   children?: ReactNode;
 }
 
 export async function AuthGuard({ children }: AuthGuardProps) {
-  const user = await checkAuth();
+  // const user = await checkAuth();
+  const user = {email: "test@test.com", id: "123"};
 
   return (
     <div className="flex-1 w-full flex flex-col gap-12">

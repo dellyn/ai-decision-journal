@@ -1,5 +1,13 @@
 import { createClient } from "@/lib/supabase/client";
-import { AuthFormData, SignUpFormData } from "../types/auth";
+export interface AuthFormData {
+  email: string;
+  password: string;
+}
+
+export interface SignUpFormData extends AuthFormData {
+  repeatPassword: string;
+}
+
 
 export const authApi = {
   async login({ email, password }: AuthFormData) {

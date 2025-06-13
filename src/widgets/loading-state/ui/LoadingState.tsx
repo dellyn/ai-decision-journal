@@ -1,4 +1,3 @@
-import { Card } from "@/shared/components/ui/card";
 import { Loader2 } from "lucide-react";
 
 interface LoadingStateProps {

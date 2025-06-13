@@ -15,6 +15,7 @@ export function DecisionsList() {
   const pathname = usePathname();
   const router = useRouter();
 
+  console.log(data)
   useProcessingDecisions(data?.data || []);
 
   const handleDecisionClick = (decisionId: string) => {

@@ -1,4 +1,3 @@
-import { Card } from "@/shared/components/ui/card";
 import { Button } from "@/shared/components/ui/button";
 import { AlertCircle, ArrowLeft } from "lucide-react";
 import { useRouter } from "next/navigation";

@@ -4,6 +4,7 @@ import { decisionFormSchema } from "@/entities/decision";
 import { createDecisionWithProcessing } from "@/lib/services/decisionService";
 import { getDecisions } from "@/lib/repositories/decisionRepository";
 import { revalidatePath } from "next/cache";
+import { ZodError } from "zod";
 
 export const revalidate = 60; // Cache for 60 seconds
 
@@ -60,10 +61,10 @@ export async function POST(request: Request) {
     revalidatePath('/api/decisions');
 
     return NextResponse.json(decision);
-  } catch (error) {
+  } catch (error: unknown) {
     console.error("Error creating decision:", error);
     
-    if (error.name === "ZodError") {
+    if (error instanceof ZodError) {
       return NextResponse.json(
         { message: "Invalid input", errors: error.errors },
         { status: 400 }

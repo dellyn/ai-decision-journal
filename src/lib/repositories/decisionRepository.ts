@@ -1,20 +1,8 @@
 import { createClient } from "@/lib/supabase/server";
-import { DecisionFormData } from "@/entities/decision";
+import { Decision, DecisionFormData, DecisionStatus } from "@/entities/decision";
 
-export interface DecisionRecord {
-  id: string;
+export interface DecisionRecord extends Decision {
   userId: string;
-  situation: string;
-  decision: string;
-  reasoning?: string;
-  status:  "processing" | "done" | "error";
-  analysis?: {
-    category: string;
-    biases: string[];
-    alternatives: string[];
-  };
-  createdAt: string;
-  updatedAt: string;
 }
 
 async function getClient() {
@@ -31,7 +19,7 @@ export async function createDecision(data: DecisionFormData, userId: string): Pr
       situation: data.situation,
       decision: data.decision,
       reasoning: data.reasoning,
-      status: "processing",
+      status: DecisionStatus.PROCESSING,
     })
     .select()
     .single();

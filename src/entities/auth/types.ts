@@ -10,5 +10,5 @@ export interface SignUpFormData extends AuthFormData {
 
 export interface AuthState {
   isLoading: boolean;
-  error: AuthError | null;
+  error: unknown;
 } 

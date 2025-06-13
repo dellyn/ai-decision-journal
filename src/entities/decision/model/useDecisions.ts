@@ -10,29 +10,27 @@ interface PaginatedResponse {
   pageSize: number;
 }
 
-interface ApiResponse {
-  data: PaginatedResponse;
-}
+
 
 export function useDecisions(page: number = 1, pageSize: number = 10) {
-  return useQuery<ApiResponse>({
+  return useQuery<PaginatedResponse>({
     queryKey: ["decisions", page, pageSize],
     queryFn: () => fetch(`${API_URL}?page=${page}&pageSize=${pageSize}`).then((res) => res.json()),
   });
 }
 
 export function useDecision(id: string) {
-  return useQuery<{ data: Decision }>({
+  return useQuery<Decision>({
     queryKey: ["decision", id],
     queryFn: () => fetch(`${API_URL}/${id}`).then((res) => res.json()),
     enabled: !!id,
   });
 }
 
-export function useCreateDecision({onSuccess}: {onSuccess: (response: { data: Decision }) => void}) {
+export function useCreateDecision({onSuccess}: {onSuccess: (response: Decision) => void}) {
   const queryClient = useQueryClient();
 
-  return useMutation<{ data: Decision }, Error, DecisionFormData>({
+  return useMutation<Decision, Error, DecisionFormData>({
     mutationFn: (data: DecisionFormData) =>
       fetch(API_URL, {
         method: "POST",
@@ -40,7 +38,6 @@ export function useCreateDecision({onSuccess}: {onSuccess: (response: { data: De
         body: JSON.stringify(data),
       }).then((res) => res.json()),
       onSuccess: (response) => {
-        console.log(3,response)
         onSuccess(response);
         queryClient.invalidateQueries({ queryKey: ["decisions"] });
         queryClient.setQueryData(["decision", response.id], response);

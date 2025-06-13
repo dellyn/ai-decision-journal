@@ -15,7 +15,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { authApi } from "@/shared/api/auth";
-import { SignUpFormData, AuthState } from "@/shared/types/auth";
+import { SignUpFormData, AuthState } from "@/entities/auth/types";
 
 export function SignUpForm({
   className,
@@ -111,9 +111,9 @@ export function SignUpForm({
                   }
                 />
               </div>
-              {state.error && (
-                <p className="text-sm text-red-500">{state.error.message}</p>
-              )}
+              {state?.error ? (
+                <p className="text-sm text-red-500">{state?.error as string}</p>
+              ) : null}
               <Button type="submit" className="w-full" disabled={state.isLoading}>
                 {state.isLoading ? "Creating an account..." : "Sign up"}
               </Button>

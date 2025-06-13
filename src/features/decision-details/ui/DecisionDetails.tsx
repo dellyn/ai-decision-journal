@@ -1,6 +1,6 @@
 "use client";
 
-import { DecisionRecord } from "@/entities/decision";
+import { Decision } from "@/entities/decision";
 import { Card } from "@/shared/components/ui/card";
 import { Badge } from "@/shared/components/ui/badge";
 import { Loader2, X } from "lucide-react";
@@ -11,7 +11,7 @@ import { useUpdateDecision } from "@/entities/decision/model/useDecisions";
 import { DecisionStatus } from "@/entities/decision/model/types";
 
 interface DecisionDetailsProps {
-  decision: DecisionRecord;
+  decision: Decision;
 }
 
 export function DecisionDetails({ decision }: DecisionDetailsProps) {
@@ -25,7 +25,7 @@ export function DecisionDetails({ decision }: DecisionDetailsProps) {
   const handleRetry = () => {
     retryAnalysis({
       id: decision.id,
-      data: { status: "processing" }
+      data: { status: DecisionStatus.PROCESSING }
     });
   };
 

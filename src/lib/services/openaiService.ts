@@ -1,17 +1,17 @@
 import OpenAI from 'openai';
-import { DecisionAnalysis, Bias } from '@/entities/decision';
+import { DecisionAnalysis, Bias, DecisionCategory } from '@/entities/decision';
 
 interface OpenAIAnalysisResponse {
-  category: 'Emotional' | 'Strategic' | 'Impulsive' | 'Rational';
+  category: DecisionCategory;
   biases: Bias[];
   alternatives: string[];
+  suggestions: string[];
 }
 
 function createOpenAIClient() {
   if (!process.env.OPENAI_API_KEY) {
     throw new Error('OPENAI_API_KEY is not defined');
   }
-console.log('API_KEY',process.env.OPENAI_API_KEY)
   return new OpenAI({ apiKey: "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" });
 }
 
@@ -30,24 +30,20 @@ Provide analysis in the following JSON format:
       "description": "detailed description of how this bias might have influenced the decision"
     }
   ],
-  "alternatives": ["list of potential alternatives that weren't considered"]
+  "alternatives": ["list of potential alternatives that weren't considered"],
+  "suggestions": ["list of actionable suggestions to improve the decision"],
 }`;
 }
 
 function validateAnalysis(analysis: OpenAIAnalysisResponse): DecisionAnalysis {
-  if (!analysis.category || !analysis.biases || !analysis.alternatives) {
+  if (!analysis.category || !analysis.biases || !analysis.alternatives || !analysis.suggestions ) {
     throw new Error('Invalid analysis format from OpenAI');
   }
 
-  // if (!['Emotional', 'Strategic', 'Impulsive', 'Rational'].includes(analysis.category)) {
-  //   throw new Error('Invalid decision category');
-  // }
-
-  if (!Array.isArray(analysis.biases) || !Array.isArray(analysis.alternatives)) {
+  if (!Array.isArray(analysis.biases) || !Array.isArray(analysis.alternatives) || !Array.isArray(analysis.suggestions)) {
     throw new Error('Invalid analysis arrays');
   }
 
-  // Validate each bias has required fields
   analysis.biases.forEach(bias => {
     if (!bias.name || !bias.description) {
       throw new Error('Invalid bias format: missing name or description');
@@ -57,7 +53,8 @@ function validateAnalysis(analysis: OpenAIAnalysisResponse): DecisionAnalysis {
   return {
     category: analysis.category,
     biases: analysis.biases,
-    alternatives: analysis.alternatives
+    alternatives: analysis.alternatives,
+    suggestions: analysis.suggestions,
   };
 }
 
@@ -80,8 +77,11 @@ export async function analyzeDecision(situation: string, decision: string, reaso
       response_format: { type: "json_object" }
     });
 
-    console.log('response', response);
-    const analysis = JSON.parse(response.choices[0].message.content) as OpenAIAnalysisResponse;
+    if (!response.choices[0].message.content) {
+      throw new Error('No content in OpenAI response');
+    }
+
+    const analysis = JSON.parse(response.choices[0].message.content);
     return validateAnalysis(analysis);
   } catch (error) {
     console.error('OpenAI API error:', error);
