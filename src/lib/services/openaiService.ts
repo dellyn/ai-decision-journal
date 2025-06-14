@@ -1,5 +1,8 @@
 import OpenAI from 'openai';
 import { DecisionAnalysis } from '@/entities/decision';
+import dotenv from 'dotenv';
+
+dotenv.config();
 
 type OpenAIAnalysisResponse = DecisionAnalysis;
 
@@ -49,7 +52,6 @@ Any output that violates the schema or adds extra text will be rejected.`
 function createOpenAIClient() {
   const apiKey = process.env.OPENAI_API_KEY;
   if (!apiKey) {
-    console.error('OPENAI_API_KEY is not defined in environment variables');
     throw new Error('OpenAI API key is not configured');
   }
   return new OpenAI({ apiKey });

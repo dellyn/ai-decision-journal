@@ -1,6 +1,6 @@
 import { DecisionRecord } from '@/lib/repositories/decisionRepository';
 import { analyzeDecision } from '@/lib/services/openaiService';
-import { updateDecisionStatus, updateDecisionAnalysis } from '@/lib/repositories/decisionRepository';
+import { updateDecisionStatus, updateDecisionAnalysis, resetDecisionProcessing } from '@/lib/repositories/decisionRepository';
 import { DecisionStatus } from '@/entities/decision';
 import { ApiError, createApiError } from '@/shared/api/error-handler';
 
@@ -28,6 +28,9 @@ export async function processDecision(decision: DecisionRecord): Promise<void> {
   console.log('Starting decision processing:', { decisionId: decision.id });
   
   try {
+    // Reset processing state before starting new analysis
+    await resetDecisionProcessing(decision.id);
+    
     await checkProcessingTimeout(decision);
     await updateDecisionStatus(decision.id, DecisionStatus.PROCESSING);
     console.log('Updated decision status to processing:', { decisionId: decision.id });

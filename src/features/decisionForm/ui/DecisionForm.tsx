@@ -21,6 +21,7 @@ export function DecisionForm() {
   const router = useRouter();
   const { mutate: createDecision, isPending } = useCreateDecision({
     onSuccess: (decision) => {
+      console.log({decision})
       router.push(`${Routes.DECISIONS}/${decision.id}`);
     }
   });

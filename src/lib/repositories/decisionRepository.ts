@@ -171,7 +171,7 @@ export async function getDecisions(
 export async function getDecisionById(id: string): Promise<Omit<DecisionRecord, "userId">> {
   try {
     const supabase = await getClient();
-
+console.log({id})
     const { data, error } = await supabase
       .from("decisions")
       .select("id, situation, decision, reasoning, status, analysis, createdAt, updatedAt, lastProcessedAt")
@@ -188,6 +188,27 @@ export async function getDecisionById(id: string): Promise<Omit<DecisionRecord, 
     }
 
     return data;
+  } catch (error) {
+    throw createApiError(error);
+  }
+}
+
+export async function resetDecisionProcessing(decisionId: string): Promise<void> {
+  try {
+    const supabase = await getClient();
+    
+    const { error } = await supabase
+      .from("decisions")
+      .update({ 
+        lastProcessedAt: null,
+        status: DecisionStatus.PROCESSING
+      })
+      .eq("id", decisionId);
+
+    if (error?.message) {
+      console.error("Supabase error:", error);
+      throw new ApiError(500, error.message);
+    }
   } catch (error) {
     throw createApiError(error);
   }

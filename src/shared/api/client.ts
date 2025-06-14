@@ -1,28 +1,18 @@
-import { ApiError, createApiError } from './error-handler';
+export async function httpClient<T>(url: string, options: RequestInit = {}): Promise<T> {
+  const headers = new Headers(options.headers);
+  
+  if (options.method?.toUpperCase() === 'POST' || options.method?.toUpperCase() === 'PATCH') {
+    headers.set('Content-Type', 'application/json');
+  }
 
-export async function httpClient<T>(url: string, options: RequestInit): Promise<T> {
-    try {
-        const response = await fetch(url, {
-            headers: {
-                'Content-Type': 'application/json',
-                ...options.headers,
-            },
-            ...options,
-            body: options.body ? JSON.stringify(options.body) : undefined,
-        });
+  const response = await fetch(url, {
+    ...options,
+    headers
+  });
 
-        const data = await response.json();
+  if (!response.ok) {
+    throw new Error(`HTTP error! status: ${response.status}`);
+  }
 
-        if (!response.ok) {
-            throw new ApiError(
-                response.status,
-                data.error?.message || 'An error occurred',
-                data.error?.code
-            );
-        }
-
-        return data;
-    } catch (error) {
-        throw createApiError(error);
-    }
+  return response.json() as Promise<T>;
 }

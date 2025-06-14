@@ -11,6 +11,9 @@ export function QueryProvider({ children }: { children: React.ReactNode }) {
         defaultOptions: {
           queries: {
             refetchOnWindowFocus: false,
+            refetchOnMount: true,
+            staleTime: 0,
+            retry: 1,
           },
         },
       })
@@ -19,8 +22,8 @@ export function QueryProvider({ children }: { children: React.ReactNode }) {
   return (
     <ErrorBoundary>
       <QueryClientProvider client={queryClient}>
-          {children}
-        </QueryClientProvider>
+        {children}
+      </QueryClientProvider>
     </ErrorBoundary>
   );
 } 

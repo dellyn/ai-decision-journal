@@ -21,17 +21,3 @@ export function createApiError(error: unknown): ApiError {
 
   return new ApiError(500, 'An unexpected error occurred');
 }
-
-
-export function handleApiResponse<T>(response: Response): Promise<T> {
-  if (!response.ok) {
-    return response.json().then(data => {
-      throw new ApiError(
-        response.status,
-        data.error?.message || 'An error occurred',
-        data.error?.code
-      );
-    });
-  }
-  return response.json();
-} 

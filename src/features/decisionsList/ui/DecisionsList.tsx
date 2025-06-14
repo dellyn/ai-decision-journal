@@ -1,8 +1,6 @@
 "use client";
 
-import { useState } from "react";
 import { usePathname, useRouter } from "next/navigation";
-import { Button } from "@/shared/components/ui/button";
 import { Loader2 } from "lucide-react";
 import { Routes } from "@/shared/routes";
 import { useProcessingDecisions } from "@/entities/decision/model/useProcessingDecisions";
@@ -13,12 +11,12 @@ interface DecisionsListProps {
   onItemClick?: () => void;
 }
 
-// TODO: move to widgets
+// TODO: move to widgets, add error handling
 export function DecisionsList({ onItemClick }: DecisionsListProps) {
-  const [pageNumber, setPageNumber] = useState(1);
-  const { data, isLoading, error } = useDecisions(pageNumber, 10);
+  const { data, isLoading } = useDecisions();
   const pathname = usePathname();
   const router = useRouter();
+
 
   useProcessingDecisions(data?.data);
   const handleDecisionClick = (decisionId: string) => {
@@ -30,15 +28,6 @@ export function DecisionsList({ onItemClick }: DecisionsListProps) {
     return (
       <div className="flex justify-center items-center h-full">
         <Loader2 className="h-8 w-8 animate-spin" />
-      </div>
-    );
-  }
-
-  if (error) {
-    return (
-      <div className="flex flex-col items-center gap-4 p-8">
-        <p className="text-destructive">Error loading decisions</p>
-        <Button onClick={() => setPageNumber(1)}>Retry</Button>
       </div>
     );
   }
