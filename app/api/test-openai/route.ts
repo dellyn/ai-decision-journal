@@ -4,7 +4,7 @@ import OpenAI from 'openai';
 export async function GET() {
   try {
     const client = new OpenAI({ 
-      apiKey: "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"
+      apiKey: process.env.OPENAI_API_KEY
     });
 
     const response = await client.chat.completions.create({

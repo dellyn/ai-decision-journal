@@ -31,6 +31,7 @@ export interface Decision {
   analysis?: DecisionAnalysis;
   createdAt: string;
   updatedAt: string;
+  lastProcessedAt?: string;
 }
 
 export type DecisionResponse = Omit<Decision, 'userId'>

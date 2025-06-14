@@ -2,25 +2,40 @@ import { DecisionRecord } from '@/lib/repositories/decisionRepository';
 import { analyzeDecision } from '@/lib/services/openaiService';
 import { updateDecisionStatus, updateDecisionAnalysis } from '@/lib/repositories/decisionRepository';
 import { DecisionStatus } from '@/entities/decision';
-import { withTimeout } from '@/shared/utils/timeout';
+import { ApiError, createApiError } from '@/shared/api/error-handler';
 
 const PROCESSING_TIMEOUT = 120000; // 120 seconds
+
+async function checkProcessingTimeout(decision: DecisionRecord): Promise<void> {
+  if (!decision.lastProcessedAt) return;
+
+  const processingStart = new Date(decision.lastProcessedAt).getTime();
+  const now = new Date().getTime();
+  const processingTime = now - processingStart;
+
+  if (processingTime > PROCESSING_TIMEOUT) {
+    console.log('Decision processing timed out:', {
+      decisionId: decision.id,
+      processingTime,
+      lastProcessedAt: decision.lastProcessedAt
+    });
+    await updateDecisionStatus(decision.id, DecisionStatus.ERROR);
+    throw new ApiError(408, 'Decision processing timed out');
+  }
+}
 
 export async function processDecision(decision: DecisionRecord): Promise<void> {
   console.log('Starting decision processing:', { decisionId: decision.id });
   
   try {
+    await checkProcessingTimeout(decision);
     await updateDecisionStatus(decision.id, DecisionStatus.PROCESSING);
     console.log('Updated decision status to processing:', { decisionId: decision.id });
 
-    const analysis = await withTimeout(
-      analyzeDecision(
-        decision.situation,
-        decision.decision,
-        decision.reasoning
-      ),
-      PROCESSING_TIMEOUT,
-      'Decision analysis timed out after 120 seconds'
+    const analysis = await analyzeDecision(
+      decision.situation,
+      decision.decision,
+      decision.reasoning
     );
     
     console.log('Analysis completed successfully:', { 
@@ -46,6 +61,6 @@ export async function processDecision(decision: DecisionRecord): Promise<void> {
     });
     
     await updateDecisionStatus(decision.id, DecisionStatus.ERROR);
-    throw error;
+    throw createApiError(error);
   }
 }
