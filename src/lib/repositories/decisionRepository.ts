@@ -144,12 +144,12 @@ export async function getDecisions(
   };
 }
 
-export async function getDecisionById(id: string): Promise<DecisionRecord> {
+export async function getDecisionById(id: string): Promise<Omit<DecisionRecord, "userId">> {
   const supabase = await getClient();
 
   const { data, error } = await supabase
     .from("decisions")
-    .select("*")
+    .select("id, situation, decision, reasoning, status, analysis, createdAt, updatedAt")
     .eq("id", id)
     .single();
 

@@ -24,7 +24,7 @@ export function useProcessingDecisions(decisions: Decision[]  = []) {
       );
       return null;
     },
-    refetchInterval: processingDecisions.length > 0 ? 3000 : false,
+    refetchInterval: processingDecisions.length > 0 ? 5000 : false,
     staleTime: 0,
     enabled: processingDecisions.length > 0
   });
