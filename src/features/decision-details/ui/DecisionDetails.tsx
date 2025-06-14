@@ -47,7 +47,7 @@ export function DecisionDetails({ decision }: DecisionDetailsProps) {
   return (
     <div className="w-full h-full flex flex-col">
       <div className="flex-1 overflow-y-auto scrollbar scrollbar-w-2 scrollbar-thumb-rounded scrollbar-thumb-gray-300 scrollbar-track-transparent hover:scrollbar-thumb-gray-400">
-      <PageHeader title="Decision Details" onClose={handleClose}  />
+        <PageHeader title="Decision Details" onClick={handleClose} icon={<X className="h-4 w-4" />} />
           <div className="space-y-6 p-6">
             <DecisionContent decision={decision} />
             <DecisionStatusComponent 

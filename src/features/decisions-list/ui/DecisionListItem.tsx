@@ -4,10 +4,6 @@ import { Decision, DecisionStatus } from "@/entities/decision";
 import { Loader2 } from "lucide-react";
 import { Badge } from "@/shared/components/ui/badge";
 
-function getSummaryTitle(situation: string): string {
-  if (!situation) return '';
-  return situation.length > 50 ? situation.slice(0, 100) + '' : situation;
-}
 
 export function DecisionListItem({ 
   decision, 
@@ -28,7 +24,7 @@ export function DecisionListItem({
     >
       <div className="flex items-center justify-between">
         <div className="flex flex-col gap-1 overflow-hidden">
-          <h3 className="font-medium text-ellipsis overflow-hidden whitespace-nowrap">{decision.situation}</h3>
+          <h3 className="font-medium text-ellipsis overflow-hidden whitespace-nowrap">{decision?.analysis?.title || decision?.situation}</h3>
           {decision.analysis && (
             <p className="text-sm text-muted-foreground">
               {decision.analysis.category} • {decision.analysis.biases.length} biases

@@ -1,12 +1,7 @@
 import OpenAI from 'openai';
-import { DecisionAnalysis, Bias, DecisionCategory } from '@/entities/decision';
+import { DecisionAnalysis } from '@/entities/decision';
 
-interface OpenAIAnalysisResponse {
-  category: DecisionCategory;
-  biases: Bias[];
-  alternatives: string[];
-  suggestions: string[];
-}
+type OpenAIAnalysisResponse = DecisionAnalysis;
 
 const systemPrompt = `
 You are “Decision Mentor” a warm, encouraging coach who blends solid decision-science with a human touch.
@@ -22,6 +17,7 @@ Tone & Style Rules
 You must produce ONLY valid JSON that conforms to this schema:
 
 {
+  "title": "4 words title of the decision with emojie related to category (e.g., '🤔 Marrying the right person')",
   "category": "concise single word category of the decision type label you create (e.g., 'Emotional')",
   "biases": [
     {
@@ -76,6 +72,7 @@ function validateAnalysis(analysis: OpenAIAnalysisResponse): DecisionAnalysis {
   });
 
   return {
+    title: analysis.title,
     category: analysis.category,
     biases: analysis.biases,
     alternatives: analysis.alternatives,
@@ -84,6 +81,7 @@ function validateAnalysis(analysis: OpenAIAnalysisResponse): DecisionAnalysis {
 }
 
 export async function analyzeDecision(situation: string, decision: string, reasoning?: string): Promise<DecisionAnalysis> {
+  console.log('start analyzeDecision');
   try {
     const client = createOpenAIClient();
     const prompt = buildPrompt(situation, decision, reasoning);
@@ -106,7 +104,9 @@ export async function analyzeDecision(situation: string, decision: string, reaso
       throw new Error('No content in OpenAI response');
     }
 
+    console.log(1);
     const analysis = JSON.parse(response.choices[0].message.content);
+    console.log('end analyzeDecision');
     return validateAnalysis(analysis);
   } catch (error) {
     console.error('OpenAI API error:', error);

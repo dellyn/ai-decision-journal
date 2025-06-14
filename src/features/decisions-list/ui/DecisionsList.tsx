@@ -9,8 +9,12 @@ import { useProcessingDecisions } from "@/entities/decision/model/useProcessingD
 import { useDecisions } from "@/entities/decision/model/useDecisions";
 import { DecisionListItem } from "./DecisionListItem";
 
+interface DecisionsListProps {
+  onItemClick?: () => void;
+}
+
 // TODO: move to widgets
-export function DecisionsList() {
+export function DecisionsList({ onItemClick }: DecisionsListProps) {
   const [pageNumber, setPageNumber] = useState(1);
   const { data, isLoading, error } = useDecisions(pageNumber, 10);
   const pathname = usePathname();
@@ -19,6 +23,7 @@ export function DecisionsList() {
   useProcessingDecisions(data?.data);
   const handleDecisionClick = (decisionId: string) => {
     router.push(`${Routes.DECISIONS}/${decisionId}`);
+    onItemClick?.();
   };
 
   if (isLoading) {
@@ -60,7 +65,7 @@ export function DecisionsList() {
       </div>
 
       <div className="flex justify-center gap-2 p-4 border-t">
-        TODO: Pagination
+        TODO: Infinite scroll or pagination
       </div>
     </div>
   );

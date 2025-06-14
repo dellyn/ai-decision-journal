@@ -68,9 +68,18 @@ export async function updateDecisionAnalysis(
     .eq("id", decisionId);
 
   if (error?.message) {
-    console.error("Supabase error:", error);
+    console.error("Failed to update decision analysis:", {
+      decisionId,
+      analysis,
+      error: error.message
+    });
     throw new Error(error.message || "Failed to update decision analysis");
   }
+
+  console.log("Successfully updated decision analysis:", {
+    decisionId,
+    status: "done"
+  });
 }
 
 export async function updateDecision(

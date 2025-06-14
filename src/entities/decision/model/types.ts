@@ -15,6 +15,7 @@ export interface Bias {
 }
 
 export type DecisionAnalysis = {
+  title?: string;
   category: DecisionCategory;
   alternatives: string[];
   biases: Bias[];
