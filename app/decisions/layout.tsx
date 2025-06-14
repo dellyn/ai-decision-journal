@@ -1,7 +1,7 @@
-import { AuthGuard } from "@/widgets/auth-guard";
-import { Header } from "@/widgets/header";
+import { AuthGuard } from "@/widgets/AuthGuard";
+import { Header } from "@/widgets/Header";
 import { TwoColumnLayout } from "@/shared/layouts/TwoColumnLayout";
-import { SideBar } from "@/widgets/sidebar/ui/SideBar";
+import { SideBar } from "@/widgets/Sidebar/ui/SideBar";
 
 export default function DecisionsLayout({
   children,

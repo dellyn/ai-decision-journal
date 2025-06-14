@@ -1,6 +1,6 @@
 "use client";
 
-import { DecisionDetailsSlot } from "@/widgets/decision-slot";
+import { DecisionDetailsSlot } from "@/widgets/DecisionSlot";
 import { use } from "react";
 
 interface DecisionPageProps {

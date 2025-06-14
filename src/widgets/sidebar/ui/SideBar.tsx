@@ -1,7 +1,7 @@
 "use client";
 import { Button } from "@/shared/components/ui/button";
 import { Plus } from "lucide-react";
-import { DecisionsList } from "@/features/decisions-list";
+import { DecisionsList } from "@/features/DecisionsList";
 import { useRouter } from "next/navigation";
 import { Routes } from "@/shared/routes";
 import { useUIStore } from "@/shared/store/ui";

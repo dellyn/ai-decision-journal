@@ -1,5 +1,5 @@
-import { ThemeSwitcher } from "@/features/theme-switcher";
-import { AuthButton } from "@/widgets/auth-button";
+import { ThemeSwitcher } from "@/shared/components/ThemeSwitcher";
+import { AuthButton } from "@/widgets/AuthButton";
 import { MenuButton } from "./MenuButton";
 import { getCurrentUser } from "@/entities/user/api";
 

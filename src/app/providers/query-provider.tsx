@@ -2,7 +2,7 @@
 
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { useState } from "react";
-import { ErrorBoundary } from '@/shared/components/error-boundary';
+import { ErrorBoundary } from '@/shared/components/ErrorBoundary';
 
 export function QueryProvider({ children }: { children: React.ReactNode }) {
   const [queryClient] = useState(

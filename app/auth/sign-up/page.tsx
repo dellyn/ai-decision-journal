@@ -1,6 +1,6 @@
 "use client";
 
-import { SignUpForm } from "@/features/auth/ui/sign-up-form";
+import { SignUpForm } from "@/features/auth";
 
 export default function SignUpPage() {
   return (

@@ -1,9 +1,9 @@
 import { useDecision } from "@/entities/decision";
-import { DecisionDetails } from "@/features/decision-details";
+import { DecisionDetails } from "@/features/DecisionDetails";
 import { Routes } from "@/shared/routes";
 import { useRouter } from "next/navigation";
-import { ErrorState } from "@/widgets/error-state";
-import { LoadingState } from "@/widgets/loading-state";
+import { ErrorState } from "@/widgets/ErrorState";
+import { LoadingState } from "@/widgets/LoadingState";
 
 interface DecisionDetailsSlotProps {
   id: string;
